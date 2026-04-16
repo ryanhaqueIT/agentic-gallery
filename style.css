@@ -98,7 +98,7 @@
       width: 280px;
       height: 280px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(246, 243, 240, 0.48), transparent 70%);
+      background: radial-gradient(circle, rgba(246, 243, 240, 0.15), transparent 70%);
       filter: blur(40px);
       mix-blend-mode: luminosity;
       opacity: 0;
