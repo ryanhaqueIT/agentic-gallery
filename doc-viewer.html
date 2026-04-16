@@ -260,7 +260,7 @@
   </div>
 
   <div class="doc-page">
-    <a href="javascript:history.back()" class="doc-back"><span class="doc-back-arrow">&larr;</span> Back</a>
+    <a id="backLink" href="works.html" class="doc-back"><span class="doc-back-arrow">&larr;</span> Back to project</a>
     <div class="doc-label"><span id="docLabel">Document</span></div>
     <h1 class="doc-title" id="docTitle">Loading...</h1>
     <div class="doc-content" id="docContent">
@@ -304,12 +304,21 @@
     const file = params.get("file");
     const title = params.get("title") || "Document";
     const label = params.get("label") || "Document";
+    const back = params.get("back");
 
     document.getElementById("docTitle").textContent = title;
     document.getElementById("docLabel").textContent = label;
-    document.title = title + " — Ryan Haque";
+    document.title = title + " \u2014 Ryan Haque";
+
+    // Set back link
+    if (back) {
+      document.getElementById("backLink").href = back;
+    }
 
     if (file) {
+      // Compute base path for resolving relative image URLs in the markdown
+      const fileDir = file.substring(0, file.lastIndexOf("/") + 1);
+
       fetch(file)
         .then(r => {
           if (!r.ok) throw new Error("File not found");
@@ -317,6 +326,15 @@
         })
         .then(md => {
           document.getElementById("docContent").innerHTML = marked.parse(md);
+
+          // Fix relative image paths — rewrite src to be relative to doc-viewer.html
+          document.querySelectorAll(".doc-content img").forEach(img => {
+            const src = img.getAttribute("src");
+            if (src && !src.startsWith("http") && !src.startsWith("/") && !src.startsWith("data:")) {
+              img.src = fileDir + src;
+            }
+          });
+
           // Animate content in
           gsap.fromTo(".doc-content", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" });
         })

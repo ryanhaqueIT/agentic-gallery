@@ -1,14 +1,14 @@
 # Vendor Platform Architecture (Email + Phone)
 
 Status: Draft v1  
-Source of truth sequence: `plan/rough_drawings/flow_4.png`
+Source of truth sequence: `plaimages/flow_4.png`
 
 ## 1. Purpose
 
 This document is the single architecture reference for the vendor assistant platform.
 
 It combines:
-- The email workflow from `plan/rough_drawings/flow_4.png`.
+- The email workflow from `plaimages/flow_4.png`.
 - The frontend build direction (Oratio scaffold + WeddingOS pages).
 - The upcoming phone-call workflow.
 - Data design (DynamoDB + S3 + vector storage).
@@ -16,7 +16,7 @@ It combines:
 
 ## 2. Flow Diagram (Current Source of Truth)
 
-![Vendor Email Flow 4](./rough_drawings/flow_4.png)
+![Vendor Email Flow 4](images/flow_4.png)
 
 Notes:
 - The image above is the canonical runtime sequence for email.
