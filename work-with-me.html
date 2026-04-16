@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work with me — Ryan Haque</title>
+  <meta name="description" content="Agentic AI services — custom agents, enterprise adoption, AI product design, and advisory.">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Service cards grid */
+    .services-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 0 64px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .service-card-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .service-card-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .service-cta-btn {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 12px;
+      color: rgb(246, 243, 240);
+      padding: 8px 12px;
+      border-radius: 32px;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.08);
+      flex-shrink: 0;
+      margin-top: 8px;
+      margin-left: 32px;
+      transition: background 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .service-cta-btn:hover {
+      background: rgba(246, 243, 240, 0.08);
+    }
+
+    /* Closing CTA section */
+    .closing-cta {
+      position: relative;
+      z-index: 1;
+      padding: 100px 64px 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .closing-cta-text {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      line-height: 32px;
+      color: rgba(246, 243, 240, 0.88);
+      margin-bottom: 40px;
+    }
+
+    .closing-cta-btn {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 12px;
+      color: rgba(246, 243, 240, 0.88);
+      padding: 12px 24px;
+      border-radius: 32px;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.08);
+      transition: background 0.3s ease;
+    }
+
+    .closing-cta-btn:hover {
+      background: rgba(246, 243, 240, 0.08);
+    }
+
+    @media (max-width: 768px) {
+      .services-list { padding: 0 20px; }
+      .closing-cta { padding: 80px 20px 100px; }
+      .service-cta-btn { margin-left: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Universe background -->
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+
+  <!-- Cursor halo -->
+  <div class="cursor-halo"></div>
+
+  <!-- Progressive blur -->
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link">Works</a>
+        <a href="notes.html" class="nav-link">Notes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="work-with-me.html" class="nav-link active">Work with me</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <a href="works.html">Works</a>
+    <a href="notes.html">Notes</a>
+    <a href="about.html">About</a>
+    <a href="work-with-me.html" class="active">Work with me</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="gallery-title anim-hidden" style="text-align:left; width:1120px; max-width:calc(100% - 128px);">Let's build<br>something.</h1>
+  </section>
+
+  <!-- Services -->
+  <section class="works-section" style="padding-bottom: 80px;">
+    <div class="services-list">
+
+      <a href="contact.html" class="note-card anim-hidden">
+        <div class="note-card-label"><span>Build</span></div>
+        <div class="service-card-body">
+          <div class="service-card-text">
+            <div class="note-card-title">Custom AI Agents</div>
+            <div class="note-card-desc">End-to-end agent design and build for your specific workflow. From scoping to deployment.</div>
+          </div>
+          <span class="service-cta-btn">Get in touch</span>
+        </div>
+      </a>
+
+      <a href="contact.html" class="note-card anim-hidden">
+        <div class="note-card-label"><span>Scale</span></div>
+        <div class="service-card-body">
+          <div class="service-card-text">
+            <div class="note-card-title">Enterprise Agent Adoption</div>
+            <div class="note-card-desc">Strategy and hands-on support for rolling out agentic tools across your engineering org.</div>
+          </div>
+          <span class="service-cta-btn">Get in touch</span>
+        </div>
+      </a>
+
+      <a href="contact.html" class="note-card anim-hidden">
+        <div class="note-card-label"><span>Product</span></div>
+        <div class="service-card-body">
+          <div class="service-card-text">
+            <div class="note-card-title">AI Product Design</div>
+            <div class="note-card-desc">Turn an idea into a working AI-native product. Research, prototype, ship.</div>
+          </div>
+          <span class="service-cta-btn">Get in touch</span>
+        </div>
+      </a>
+
+      <a href="contact.html" class="note-card anim-hidden">
+        <div class="note-card-label"><span>Advise</span></div>
+        <div class="service-card-body">
+          <div class="service-card-text">
+            <div class="note-card-title">Advisory & Consulting</div>
+            <div class="note-card-desc">For teams exploring what agents can do. Half-day or ongoing.</div>
+          </div>
+          <span class="service-cta-btn">Get in touch</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section class="closing-cta anim-hidden">
+    <p class="closing-cta-text">I work with a small number of clients at a time, so that every project gets the depth and attention it deserves.</p>
+    <a href="contact.html" class="closing-cta-btn">Start a conversation</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ==========================================
+    // CURSOR HALO
+    // ==========================================
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // ==========================================
+    // GSAP ANIMATIONS
+    // ==========================================
+
+    // Navbar
+    gsap.fromTo(".navbar",
+      { y: -60, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 }
+    );
+
+    // Hero title
+    gsap.fromTo(".gallery-title",
+      { y: 30, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out", delay: 0.5 }
+    );
+
+    // Service cards — batch reveal on scroll
+    gsap.set(".note-card", { y: 50, autoAlpha: 0 });
+    ScrollTrigger.batch(".note-card", {
+      interval: 0.08,
+      batchMax: 3,
+      onEnter: batch => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.12, overwrite: true }),
+      start: "top 92%"
+    });
+
+    // Closing CTA — scroll reveal
+    gsap.fromTo(".closing-cta",
+      { autoAlpha: 0, y: 40 },
+      { scrollTrigger: { trigger: ".closing-cta", start: "top 88%", once: true }, autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" }
+    );
+
+    // Footer
+    gsap.fromTo(".footer",
+      { autoAlpha: 0, y: 20 },
+      { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }
+    );
+
+    // ==========================================
+    // MOBILE MENU
+    // ==========================================
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (menuOpen) {
+          menuOpen = false;
+          navToggle.classList.remove("open");
+          document.body.style.overflow = "";
+          gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

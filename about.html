@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Ryan Haque</title>
+  <meta name="description" content="I'm Ryan Haque, a consultant building agentic AI solutions across enterprise and consumer.">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Universe background -->
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+
+  <!-- Cursor halo -->
+  <div class="cursor-halo"></div>
+
+  <!-- Progressive blur -->
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link">Works</a>
+        <a href="notes.html" class="nav-link">Notes</a>
+        <a href="about.html" class="nav-link active">About</a>
+        <a href="work-with-me.html" class="nav-link">Work with me</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <a href="works.html">Works</a>
+    <a href="notes.html">Notes</a>
+    <a href="about.html" class="active">About</a>
+    <a href="work-with-me.html">Work with me</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="gallery-title anim-hidden">Everything connects.</h1>
+  </section>
+
+  <!-- Bio -->
+  <div class="about-bio anim-hidden">
+    <p>I'm <strong>Ryan Haque</strong>, a consultant building agentic AI solutions across enterprise and consumer.</p>
+    <p>These aren't separate projects. They're the same instinct expressed through different forms. The same questions about how agents think, what they need, and what it takes to make them reliable.</p>
+  </div>
+
+  <!-- Portrait placeholder -->
+  <div class="about-portrait anim-hidden">
+    <div class="about-portrait-img" style="background: linear-gradient(145deg, #0a0a14 0%, #0420f2 40%, #c45a7b 70%, #1a0a00 100%);"></div>
+  </div>
+
+  <!-- More bio -->
+  <div class="about-bio anim-hidden" style="margin-top: 80px;">
+    <p>I consult with <strong>Commonwealth Bank of Australia</strong> to enable agentic initiatives — driving Claude Code and agent harness adoption across 7,800 engineers. I helped build <strong>Project Coral</strong> — an autonomous multi-agent orchestration system for technical debt resolution.</p>
+    <p>On the side, I build <strong>Wedding OS</strong>, AI tools for real people, and ship <strong>Claude Cowork Plugins</strong> on the marketplace.</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ==========================================
+    // CURSOR HALO
+    // ==========================================
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // ==========================================
+    // GSAP ANIMATIONS
+    // ==========================================
+
+    // Navbar
+    gsap.fromTo(".navbar",
+      { y: -60, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 }
+    );
+
+    // Hero title
+    gsap.fromTo(".gallery-title",
+      { y: 30, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out", delay: 0.5 }
+    );
+
+    // Bio sections — scroll reveal
+    document.querySelectorAll(".about-bio").forEach(bio => {
+      gsap.fromTo(bio,
+        { autoAlpha: 0, y: 40 },
+        { scrollTrigger: { trigger: bio, start: "top 88%", once: true }, autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" }
+      );
+    });
+
+    // Portrait — scroll reveal
+    gsap.fromTo(".about-portrait",
+      { autoAlpha: 0, y: 40 },
+      { scrollTrigger: { trigger: ".about-portrait", start: "top 88%", once: true }, autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" }
+    );
+
+    // Footer
+    gsap.fromTo(".footer",
+      { autoAlpha: 0, y: 20 },
+      { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }
+    );
+
+    // ==========================================
+    // MOBILE MENU
+    // ==========================================
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (menuOpen) {
+          menuOpen = false;
+          navToggle.classList.remove("open");
+          document.body.style.overflow = "";
+          gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

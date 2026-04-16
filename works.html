@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Ryan Haque</title>
+  <meta name="description" content="A living gallery for agentic AI solutions — agents, frameworks, orchestration and enterprise adoption.">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Universe background -->
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+
+  <!-- Cursor halo -->
+  <div class="cursor-halo"></div>
+
+  <!-- Progressive blur -->
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link active">Works</a>
+        <a href="notes.html" class="nav-link">Notes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="work-with-me.html" class="nav-link">Work with me</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <a href="works.html" class="active">Works</a>
+    <a href="notes.html">Notes</a>
+    <a href="about.html">About</a>
+    <a href="work-with-me.html">Work with me</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- Greeting line under hero -->
+
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="gallery-title anim-hidden">A living agentic gallery.</h1>
+  </section>
+
+  <!-- Works Grid -->
+  <section class="works-section">
+    <div class="works-grid" id="worksGrid"></div>
+  </section>
+
+  <!-- Subscribe -->
+  <section class="section-newsletter anim-hidden">
+    <div class="newsletter-heading">Agents, as they're deployed</div>
+    <form class="newsletter-form" id="subscribeForm">
+      <div class="newsletter-input-row">
+        <input type="email" class="newsletter-input" placeholder="Email address" required>
+        <button type="submit" class="newsletter-submit">Subscribe</button>
+      </div>
+      <p class="newsletter-note">No spam. No fluff. Just shipped agents and what I learned building them.</p>
+    </form>
+    <div class="newsletter-success" id="subSuccess">You're in. I'll share what's next as it ships.</div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ==========================================
+    // WORKS DATA
+    // ==========================================
+    const works = [
+      { slug: "project-coral", title: "Project Coral", desc: "Autonomous multi-agent orchestration that finds and resolves technical debt at scale.", cat: "Agent System", gradient: "linear-gradient(145deg, #1a0a00 0%, #e44d26 40%, #ff6b3d 80%, #ffd6c7 100%)" },
+      { slug: "claude-code-at-cba", title: "Claude Code at CBA", desc: "Consulting to enable agentic coding adoption across 7,800 engineers at Australia\u2019s largest bank.", cat: "Enterprise", gradient: "linear-gradient(145deg, #1a0e05 0%, #d4956a 45%, #f5e6c8 100%)" },
+      { slug: "agent-harness", title: "Agent Harness", desc: "A bootstrap framework for engineering teams building with autonomous agents.", cat: "Framework", gradient: "linear-gradient(145deg, #020c1b 0%, #0420f2 45%, #4a6cf7 100%)" },
+      { slug: "wedding-os", title: "Wedding OS (Emma)", desc: "AI studio manager for wedding vendors \u2014 email, voice and lead management in one agent.", cat: "AI Product", gradient: "linear-gradient(145deg, #1a0a1e 0%, #c45a7b 45%, #f5c6d0 100%)" },
+      { slug: "cowork-plugins", title: "Cowork Plugins", desc: "Three production plugins on the Claude marketplace \u2014 Sales, Apollo, Brand Voice.", cat: "Plugin", gradient: "linear-gradient(145deg, #0f0c29 0%, #764ba2 45%, #c4b5d9 100%)" },
+      { slug: "context-graph", title: "Context Graph", desc: "Knowledge graph infrastructure for grounding agents in structured enterprise context.", cat: "Tool", gradient: "linear-gradient(145deg, #020c1b 0%, #0c4a3a 45%, #1abc9c 100%)" },
+      { slug: "ai-content-factory", title: "AI Content Factory", desc: "An automated pipeline that turns raw ideas into finished, multi-format content.", cat: "Pipeline", gradient: "linear-gradient(145deg, #1a1033 0%, #e44d26 40%, #ffd200 100%)" },
+      { slug: "eth-agent", title: "ETH Agent", desc: "An autonomous agent that reads, reasons about, and interacts with Ethereum.", cat: "Agent", gradient: "linear-gradient(145deg, #0a0520 0%, #2d1b69 45%, #627eea 100%)" },
+      { slug: "founders-kit", title: "Founders Kit", desc: "A startup toolkit for going from zero to first customers with AI-native workflows.", cat: "Kit", gradient: "linear-gradient(145deg, #021a0a 0%, #0d8050 45%, #2ecc71 100%)" },
+      { slug: "aws-hackathon", title: "AWS Hackathon", desc: "Building at the intersection of cloud infrastructure and autonomous agents.", cat: "Hackathon", gradient: "linear-gradient(145deg, #1a0a00 0%, #ff9900 45%, #ffd599 100%)" },
+      { slug: "gcp-hackathon", title: "GCP Hackathon", desc: "Exploring multi-modal agents on Google Cloud\u2019s AI platform.", cat: "Hackathon", gradient: "linear-gradient(145deg, #0a1628 0%, #4285f4 30%, #ea4335 55%, #fbbc05 80%, #34a853 100%)" },
+      { slug: "system-prompts-analysis", title: "System Prompts Analysis", desc: "A deep analysis of how frontier AI models are instructed, constrained and shaped.", cat: "Research", gradient: "linear-gradient(145deg, #0a0a14 0%, #5a6c7e 45%, #bdc3c7 100%)" }
+    ];
+
+    // ==========================================
+    // RENDER CARDS
+    // ==========================================
+    const grid = document.getElementById("worksGrid");
+    works.forEach(w => {
+      const card = document.createElement("a");
+      card.href = `/works/${w.slug}`;
+      card.className = "work-card anim-hidden";
+      const bg = w.img ? `background-image: url('${w.img}')` : `background: ${w.gradient}`;
+      card.innerHTML = `
+        <div class="image-wrap">
+          <div class="image-inner" style="${bg};"></div>
+          <div class="image-hover-overlay"></div>
+          <div class="project-link-overlay">
+            <div class="view-work-btn">Explore</div>
+          </div>
+        </div>
+        <div class="text-wrap">
+          <div class="card-title">${w.title}</div>
+          ${w.desc ? `<div class="card-description">${w.desc}</div>` : ""}
+          <div class="card-label"><span>${w.cat}</span></div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    // ==========================================
+    // CURSOR HALO
+    // ==========================================
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // ==========================================
+    // 3D CARD TILT ON HOVER
+    // ==========================================
+    document.querySelectorAll(".image-wrap").forEach(wrap => {
+      const inner = wrap.querySelector(".image-inner");
+      wrap.addEventListener("mousemove", e => {
+        const rect = wrap.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(inner, { rotateY: x * 6, rotateX: -y * 6, duration: 0.4, ease: "power2.out" });
+      });
+      wrap.addEventListener("mouseleave", () => {
+        gsap.to(inner, { rotateY: 0, rotateX: 0, duration: 0.6, ease: "power3.out" });
+      });
+    });
+
+    // ==========================================
+    // GSAP ANIMATIONS
+    // ==========================================
+
+    // Navbar
+    gsap.fromTo(".navbar",
+      { y: -60, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 }
+    );
+
+    // Hero title
+    gsap.fromTo(".gallery-title",
+      { y: 30, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out", delay: 0.5 }
+    );
+
+    // Cards — batch scroll reveal with tilt
+    gsap.set(".work-card", { y: 50, autoAlpha: 0 });
+
+    ScrollTrigger.batch(".work-card", {
+      interval: 0.08,
+      batchMax: 4,
+      onEnter: batch => {
+        gsap.to(batch, {
+          autoAlpha: 1, y: 0,
+          duration: 0.9, ease: "power3.out",
+          stagger: 0.12, overwrite: true
+        });
+      },
+      start: "top 92%"
+    });
+
+    ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".work-card", { y: 0 }));
+
+    // Subscribe
+    gsap.fromTo(".section-newsletter",
+      { autoAlpha: 0, y: 40 },
+      { scrollTrigger: { trigger: ".section-newsletter", start: "top 88%", once: true }, autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" }
+    );
+
+    // Footer
+    gsap.fromTo(".footer",
+      { autoAlpha: 0, y: 20 },
+      { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }
+    );
+
+    // ==========================================
+    // MOBILE MENU
+    // ==========================================
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (menuOpen) {
+          menuOpen = false;
+          navToggle.classList.remove("open");
+          document.body.style.overflow = "";
+          gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+        }
+      });
+    });
+
+    // ==========================================
+    // SUBSCRIBE FORM
+    // ==========================================
+    document.getElementById("subscribeForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = this;
+      const success = document.getElementById("subSuccess");
+      gsap.to(form, {
+        autoAlpha: 0, y: -10, duration: 0.4, ease: "power2.in",
+        onComplete: () => {
+          form.style.display = "none";
+          success.style.display = "block";
+          gsap.fromTo(success, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

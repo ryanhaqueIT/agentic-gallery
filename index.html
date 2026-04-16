@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryan Haque</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+  <div class="cursor-halo"></div>
+
+  <div class="home-entrance">
+    <h1 class="gallery-title" style="visibility:hidden;">Ryan Haque</h1>
+    <a href="works.html" class="home-enter-btn" style="visibility:hidden;">Enter</a>
+  </div>
+
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script>
+    // Cursor halo
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // Entrance animation
+    gsap.fromTo(".gallery-title",
+      { autoAlpha: 0, y: 20 },
+      { autoAlpha: 1, y: 0, duration: 1.5, ease: "power3.out", delay: 0.5 }
+    );
+    gsap.fromTo(".home-enter-btn",
+      { autoAlpha: 0, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out", delay: 1.2 }
+    );
+  </script>
+</body>
+</html>

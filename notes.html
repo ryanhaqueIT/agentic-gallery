@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — Ryan Haque</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+  <div class="cursor-halo"></div>
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link">Works</a>
+        <a href="notes.html" class="nav-link active">Notes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="work-with-me.html" class="nav-link">Work with me</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="works.html">Works</a>
+    <a href="notes.html" class="active">Notes</a>
+    <a href="about.html">About</a>
+    <a href="work-with-me.html">Work with me</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="gallery-title anim-hidden" style="text-align:left; width:1120px; max-width:calc(100% - 128px);">Logged in<br>the margins.</h1>
+  </section>
+
+  <!-- Notes List -->
+  <section class="works-section" style="padding-bottom: 80px;">
+    <div class="notes-list">
+
+      <!-- Featured note -->
+      <a href="#" class="note-card anim-hidden">
+        <div class="note-card-label"><span>Featured</span></div>
+        <div class="note-card-header">
+          <div>
+            <div class="note-card-title">Why every engineer will have an agent harness by 2027</div>
+            <div class="note-card-desc">The shift from writing code to directing agents is already underway. Here's what I've seen inside one of the world's largest banks.</div>
+          </div>
+          <div class="note-read-btn">Read</div>
+        </div>
+      </a>
+
+      <!-- Section heading -->
+      <h2 class="gallery-title anim-hidden" style="font-size:48px; line-height:52px; text-align:left; padding:40px 0 0;">Becoming</h2>
+
+      <a href="#" class="note-card anim-hidden">
+        <div class="note-card-header">
+          <div>
+            <div class="note-card-title">The anatomy of Project Coral</div>
+            <div class="note-card-desc">How we built a multi-agent system that finds and fixes technical debt autonomously at CBA.</div>
+          </div>
+          <div class="note-read-btn">Read</div>
+        </div>
+      </a>
+
+      <a href="#" class="note-card anim-hidden">
+        <div class="note-card-header">
+          <div>
+            <div class="note-card-title">Agents that ship, not agents that demo</div>
+            <div class="note-card-desc">The gap between a demo agent and a production agent is wider than most people think.</div>
+          </div>
+          <div class="note-read-btn">Read</div>
+        </div>
+      </a>
+
+      <a href="#" class="note-card anim-hidden">
+        <div class="note-card-header">
+          <div>
+            <div class="note-card-title">What Wedding OS taught me about building for non-technical users</div>
+            <div class="note-card-desc">When your user is a wedding photographer, not an engineer, everything about agent design changes.</div>
+          </div>
+          <div class="note-read-btn">Read</div>
+        </div>
+      </a>
+
+      <a href="#" class="note-card anim-hidden">
+        <div class="note-card-header">
+          <div>
+            <div class="note-card-title">Context is the new prompt engineering</div>
+            <div class="note-card-desc">Why structured context graphs outperform long system prompts every time.</div>
+          </div>
+          <div class="note-read-btn">Read</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">© 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    gsap.fromTo(".navbar", { y: -60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 });
+    gsap.fromTo(".gallery-title", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out", delay: 0.5 });
+
+    gsap.set(".note-card", { y: 50, autoAlpha: 0 });
+    ScrollTrigger.batch(".note-card", {
+      interval: 0.08, batchMax: 3,
+      onEnter: batch => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.12, overwrite: true }),
+      start: "top 92%"
+    });
+
+    gsap.fromTo(".footer", { autoAlpha: 0, y: 20 }, { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" });
+
+    // Mobile menu
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+  </script>
+</body>
+</html>

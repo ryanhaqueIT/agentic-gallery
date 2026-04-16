@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Ryan Haque</title>
+  <meta name="description" content="Start a conversation. If what you've seen feels right, I'd love to hear what you're building.">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Warm amber/gold glow override for contact page */
+    .background-glow {
+      background:
+        radial-gradient(ellipse 60% 50% at 85% 5%, rgba(180, 120, 40, 0.5), transparent),
+        radial-gradient(ellipse 50% 50% at 70% 30%, rgba(160, 90, 20, 0.35), transparent),
+        radial-gradient(ellipse 60% 40% at 55% 55%, rgba(140, 60, 10, 0.3), transparent),
+        radial-gradient(ellipse 40% 40% at 40% 75%, rgba(100, 40, 5, 0.25), transparent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Universe background -->
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+
+  <!-- Cursor halo -->
+  <div class="cursor-halo"></div>
+
+  <!-- Progressive blur -->
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link">Works</a>
+        <a href="notes.html" class="nav-link">Notes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="work-with-me.html" class="nav-link">Work with me</a>
+        <a href="contact.html" class="nav-link active">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <a href="works.html">Works</a>
+    <a href="notes.html">Notes</a>
+    <a href="about.html">About</a>
+    <a href="work-with-me.html">Work with me</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="gallery-title anim-hidden">Start a conversation.</h1>
+  </section>
+
+  <!-- Contact intro + form -->
+  <div class="contact-form anim-hidden">
+    <p style="font-size: 15px; letter-spacing: 0.6px; line-height: 28px; color: rgba(246, 243, 240, 0.72); margin-bottom: 28px;">This is where something begins. If what you've seen feels right, I'd love to hear what you're building.</p>
+    <p style="font-size: 15px; letter-spacing: 0.6px; line-height: 28px; color: rgba(246, 243, 240, 0.72); margin-bottom: 56px;">I work with a small number of clients at a time, so that every project gets the depth and attention it deserves.</p>
+
+    <form id="contactForm">
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Email*</label>
+        <input type="email" class="form-input" placeholder="Your email" required>
+      </div>
+
+      <!-- Work type -->
+      <div class="form-group">
+        <label class="form-label">What kind of work are you exploring?*</label>
+        <div class="form-radio-group">
+          <label class="form-radio-label">
+            <input type="radio" name="work-type" value="Custom AI agent" required>
+            Custom AI agent
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="work-type" value="Enterprise agent adoption">
+            Enterprise agent adoption
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="work-type" value="AI product design">
+            AI product design
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="work-type" value="Consulting or advisory">
+            Consulting or advisory
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="work-type" value="Something else">
+            Something else
+          </label>
+        </div>
+      </div>
+
+      <!-- Project description -->
+      <div class="form-group">
+        <label class="form-label">Tell me about what you're building*</label>
+        <textarea class="form-textarea" placeholder="Your project, your users, and what the agent might do." required></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="form-submit">Send</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ==========================================
+    // CURSOR HALO
+    // ==========================================
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // ==========================================
+    // GSAP ANIMATIONS
+    // ==========================================
+
+    // Navbar
+    gsap.fromTo(".navbar",
+      { y: -60, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 }
+    );
+
+    // Hero title
+    gsap.fromTo(".gallery-title",
+      { y: 30, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out", delay: 0.5 }
+    );
+
+    // Contact form section — scroll reveal
+    gsap.fromTo(".contact-form",
+      { autoAlpha: 0, y: 40 },
+      { scrollTrigger: { trigger: ".contact-form", start: "top 88%", once: true }, autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" }
+    );
+
+    // Footer
+    gsap.fromTo(".footer",
+      { autoAlpha: 0, y: 20 },
+      { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }
+    );
+
+    // ==========================================
+    // MOBILE MENU
+    // ==========================================
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (menuOpen) {
+          menuOpen = false;
+          navToggle.classList.remove("open");
+          document.body.style.overflow = "";
+          gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+        }
+      });
+    });
+
+    // ==========================================
+    // CONTACT FORM SUBMIT
+    // ==========================================
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Placeholder — wire up to backend/API later
+      const form = this;
+      gsap.to(form, {
+        autoAlpha: 0, y: -10, duration: 0.4, ease: "power2.in",
+        onComplete: () => {
+          form.outerHTML = '<p style="font-family: JW Serif, Georgia, serif; font-size: 18px; font-weight: 500; color: rgba(246,243,240,0.88); text-align: center; padding-top: 40px;">Thanks. I\'ll be in touch soon.</p>';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
