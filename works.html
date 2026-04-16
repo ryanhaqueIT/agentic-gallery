@@ -111,10 +111,10 @@
     // WORKS DATA
     // ==========================================
     const works = [
+      { slug: "wedding-os", title: "Wedding OS (Emma)", desc: "AI studio manager for wedding vendors \u2014 email, voice and lead management in one agent.", cat: "AI Product", gradient: "linear-gradient(145deg, #1a0a1e 0%, #c45a7b 45%, #f5c6d0 100%)" },
       { slug: "project-coral", title: "Project Coral", desc: "Autonomous multi-agent orchestration that finds and resolves technical debt at scale.", cat: "Agent System", gradient: "linear-gradient(145deg, #1a0a00 0%, #e44d26 40%, #ff6b3d 80%, #ffd6c7 100%)" },
       { slug: "claude-code-at-cba", title: "Claude Code at CBA", desc: "Consulting to enable agentic coding adoption across 7,800 engineers at Australia\u2019s largest bank.", cat: "Enterprise", gradient: "linear-gradient(145deg, #1a0e05 0%, #d4956a 45%, #f5e6c8 100%)" },
       { slug: "agent-harness", title: "Agent Harness", desc: "A bootstrap framework for engineering teams building with autonomous agents.", cat: "Framework", gradient: "linear-gradient(145deg, #020c1b 0%, #0420f2 45%, #4a6cf7 100%)" },
-      { slug: "wedding-os", title: "Wedding OS (Emma)", desc: "AI studio manager for wedding vendors \u2014 email, voice and lead management in one agent.", cat: "AI Product", gradient: "linear-gradient(145deg, #1a0a1e 0%, #c45a7b 45%, #f5c6d0 100%)" },
       { slug: "cowork-plugins", title: "Cowork Plugins", desc: "Three production plugins on the Claude marketplace \u2014 Sales, Apollo, Brand Voice.", cat: "Plugin", gradient: "linear-gradient(145deg, #0f0c29 0%, #764ba2 45%, #c4b5d9 100%)" },
       { slug: "context-graph", title: "Context Graph", desc: "Knowledge graph infrastructure for grounding agents in structured enterprise context.", cat: "Tool", gradient: "linear-gradient(145deg, #020c1b 0%, #0c4a3a 45%, #1abc9c 100%)" },
       { slug: "ai-content-factory", title: "AI Content Factory", desc: "An automated pipeline that turns raw ideas into finished, multi-format content.", cat: "Pipeline", gradient: "linear-gradient(145deg, #1a1033 0%, #e44d26 40%, #ffd200 100%)" },
@@ -131,7 +131,7 @@
     const grid = document.getElementById("worksGrid");
     works.forEach(w => {
       const card = document.createElement("a");
-      card.href = `/works/${w.slug}`;
+      card.href = `works/${w.slug}.html`;
       card.className = "work-card anim-hidden";
       const bg = w.img ? `background-image: url('${w.img}')` : `background: ${w.gradient}`;
       card.innerHTML = `
