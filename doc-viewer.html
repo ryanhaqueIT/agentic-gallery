@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document — Ryan Haque</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .doc-page {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 140px 64px 80px;
+    }
+
+    .doc-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(246, 243, 240, 0.4);
+      margin-bottom: 40px;
+      transition: color 0.3s ease;
+    }
+
+    .doc-back:hover { color: rgba(246, 243, 240, 0.88); }
+
+    .doc-back-arrow {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .doc-label {
+      display: inline-flex;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.04);
+      border-radius: 2px;
+      padding: 4px 8px;
+      margin-bottom: 16px;
+    }
+
+    .doc-label span {
+      font-size: 10px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 12px;
+      color: rgba(246, 243, 240, 0.64);
+    }
+
+    .doc-title {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 40px;
+      font-weight: 500;
+      line-height: 48px;
+      color: rgba(246, 243, 240, 0.88);
+      margin-bottom: 48px;
+    }
+
+    /* Markdown rendered content */
+    .doc-content {
+      color: rgba(246, 243, 240, 0.64);
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      line-height: 28px;
+    }
+
+    .doc-content h1 {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 40px;
+      color: rgba(246, 243, 240, 0.88);
+      margin: 56px 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(246, 243, 240, 0.06);
+    }
+
+    .doc-content h2 {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 32px;
+      color: rgba(246, 243, 240, 0.88);
+      margin: 48px 0 16px;
+    }
+
+    .doc-content h3 {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: rgba(246, 243, 240, 0.88);
+      margin: 36px 0 12px;
+    }
+
+    .doc-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(246, 243, 240, 0.72);
+      margin: 28px 0 8px;
+    }
+
+    .doc-content p {
+      margin-bottom: 20px;
+    }
+
+    .doc-content strong {
+      color: rgba(246, 243, 240, 0.88);
+      font-weight: 700;
+    }
+
+    .doc-content em {
+      font-style: italic;
+      color: rgba(246, 243, 240, 0.56);
+    }
+
+    .doc-content a {
+      color: rgba(100, 140, 255, 0.8);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .doc-content a:hover { color: rgba(140, 170, 255, 1); }
+
+    .doc-content ul, .doc-content ol {
+      margin: 0 0 20px 24px;
+    }
+
+    .doc-content li {
+      margin-bottom: 8px;
+    }
+
+    .doc-content code {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 13px;
+      background: rgba(246, 243, 240, 0.06);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: rgba(246, 243, 240, 0.8);
+    }
+
+    .doc-content pre {
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.04);
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .doc-content pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      line-height: 22px;
+      color: rgba(246, 243, 240, 0.72);
+    }
+
+    .doc-content blockquote {
+      border-left: 2px solid rgba(246, 243, 240, 0.12);
+      margin: 20px 0;
+      padding: 4px 0 4px 20px;
+      color: rgba(246, 243, 240, 0.48);
+    }
+
+    .doc-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .doc-content th {
+      text-align: left;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(246, 243, 240, 0.64);
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(246, 243, 240, 0.08);
+    }
+
+    .doc-content td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(246, 243, 240, 0.04);
+      color: rgba(246, 243, 240, 0.56);
+    }
+
+    .doc-content hr {
+      border: none;
+      border-top: 1px solid rgba(246, 243, 240, 0.06);
+      margin: 40px 0;
+    }
+
+    .doc-content img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin: 16px 0;
+    }
+
+    .doc-loading {
+      color: rgba(246, 243, 240, 0.32);
+      font-style: italic;
+    }
+
+    .doc-error {
+      color: rgba(255, 100, 100, 0.64);
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .doc-page { padding: 120px 20px 60px; }
+      .doc-title { font-size: 28px; line-height: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+  <div class="cursor-halo"></div>
+
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="works.html" class="nav-link active">Works</a>
+        <a href="notes.html" class="nav-link">Notes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="work-with-me.html" class="nav-link">Work with me</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="works.html" class="active">Works</a>
+    <a href="notes.html">Notes</a>
+    <a href="about.html">About</a>
+    <a href="work-with-me.html">Work with me</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="doc-page">
+    <a href="javascript:history.back()" class="doc-back"><span class="doc-back-arrow">&larr;</span> Back</a>
+    <div class="doc-label"><span id="docLabel">Document</span></div>
+    <h1 class="doc-title" id="docTitle">Loading...</h1>
+    <div class="doc-content" id="docContent">
+      <p class="doc-loading">Loading document...</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Marked.js for markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script>
+    // Cursor halo
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // Navbar animation
+    gsap.fromTo(".navbar", { y: -60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 });
+
+    // Parse query params
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+    const title = params.get("title") || "Document";
+    const label = params.get("label") || "Document";
+
+    document.getElementById("docTitle").textContent = title;
+    document.getElementById("docLabel").textContent = label;
+    document.title = title + " — Ryan Haque";
+
+    if (file) {
+      fetch(file)
+        .then(r => {
+          if (!r.ok) throw new Error("File not found");
+          return r.text();
+        })
+        .then(md => {
+          document.getElementById("docContent").innerHTML = marked.parse(md);
+          // Animate content in
+          gsap.fromTo(".doc-content", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" });
+        })
+        .catch(err => {
+          document.getElementById("docContent").innerHTML = '<p class="doc-error">Could not load document. The file may not exist yet.</p>';
+        });
+    } else {
+      document.getElementById("docContent").innerHTML = '<p class="doc-error">No document specified.</p>';
+    }
+
+    // Mobile menu
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+  </script>
+</body>
+</html>
