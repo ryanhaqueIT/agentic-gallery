@@ -55,6 +55,64 @@
       background-position: center;
     }
 
+    .carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #010008;
+      border: 1px solid rgba(246, 243, 240, 0.06);
+    }
+    .carousel-track { position: absolute; inset: 0; }
+    .carousel-slide {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+    }
+    .carousel-slide.active { opacity: 1; visibility: visible; }
+    .carousel-slide img {
+      max-width: 100%; max-height: 100%;
+      width: auto; height: auto;
+      object-fit: contain; display: block;
+    }
+    .carousel-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(1,0,8,0.5); border: 1px solid rgba(246,243,240,0.1);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: rgba(246,243,240,0.88); font-size: 18px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      z-index: 5; transition: background 0.3s ease; user-select: none;
+    }
+    .carousel-arrow:hover { background: rgba(1,0,8,0.75); }
+    .carousel-arrow.prev { left: 20px; }
+    .carousel-arrow.next { right: 20px; }
+    .carousel-dots {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 5;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(246,243,240,0.25); border: none; padding: 0;
+      cursor: pointer; transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .carousel-dot:hover { background: rgba(246,243,240,0.5); }
+    .carousel-dot.active { background: rgba(246,243,240,0.95); transform: scale(1.2); }
+    .carousel-caption {
+      position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(246,243,240,0.6); background: rgba(1,0,8,0.4);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      padding: 6px 12px; border-radius: 32px;
+      border: 1px solid rgba(246,243,240,0.06); white-space: nowrap; z-index: 5;
+    }
+    @media (max-width: 768px) {
+      .carousel-arrow { width: 36px; height: 36px; font-size: 14px; }
+      .carousel-arrow.prev { left: 10px; }
+      .carousel-arrow.next { right: 10px; }
+    }
+
     .project-content {
       position: relative;
       z-index: 1;
@@ -279,9 +337,37 @@
     </div>
   </div>
 
-  <!-- Hero image -->
+  <!-- Hero carousel -->
   <div class="project-hero-image anim-hidden">
-    <div class="project-hero-image-inner" style="background: linear-gradient(145deg, #1a0a1e 0%, #c45a7b 45%, #f5c6d0 100%);"></div>
+    <div class="carousel" id="weddingCarousel" tabindex="0" aria-label="Wedding OS Architecture Blueprint">
+      <div class="carousel-track">
+        <div class="carousel-slide active" data-caption="Architecture overview">
+          <img src="../docs/wedding-os/images/blueprint-01.png" alt="Wedding OS — architecture overview" loading="eager">
+        </div>
+        <div class="carousel-slide" data-caption="System components">
+          <img src="../docs/wedding-os/images/blueprint-02.png" alt="Wedding OS — system components" loading="lazy">
+        </div>
+        <div class="carousel-slide" data-caption="Agent workflow">
+          <img src="../docs/wedding-os/images/blueprint-03.png" alt="Wedding OS — agent workflow" loading="lazy">
+        </div>
+        <div class="carousel-slide" data-caption="Integration layer">
+          <img src="../docs/wedding-os/images/blueprint-05.png" alt="Wedding OS — integration layer" loading="lazy">
+        </div>
+        <div class="carousel-slide" data-caption="Deployment model">
+          <img src="../docs/wedding-os/images/blueprint-06.png" alt="Wedding OS — deployment model" loading="lazy">
+        </div>
+      </div>
+      <button class="carousel-arrow prev" aria-label="Previous image">&larr;</button>
+      <button class="carousel-arrow next" aria-label="Next image">&rarr;</button>
+      <div class="carousel-caption" id="weddingCaption">Architecture overview</div>
+      <div class="carousel-dots" role="tablist">
+        <button class="carousel-dot active" data-index="0" aria-label="Image 1"></button>
+        <button class="carousel-dot" data-index="1" aria-label="Image 2"></button>
+        <button class="carousel-dot" data-index="2" aria-label="Image 3"></button>
+        <button class="carousel-dot" data-index="3" aria-label="Image 4"></button>
+        <button class="carousel-dot" data-index="4" aria-label="Image 5"></button>
+      </div>
+    </div>
   </div>
 
   <!-- Project narrative -->
@@ -404,6 +490,38 @@
     // Hero
     gsap.fromTo(".project-hero", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.4 });
     gsap.fromTo(".project-hero-image", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.6 });
+
+    // Carousel
+    (function() {
+      const root = document.getElementById("weddingCarousel");
+      if (!root) return;
+      const slides = root.querySelectorAll(".carousel-slide");
+      const dots = root.querySelectorAll(".carousel-dot");
+      const caption = document.getElementById("weddingCaption");
+      const prevBtn = root.querySelector(".carousel-arrow.prev");
+      const nextBtn = root.querySelector(".carousel-arrow.next");
+      let current = 0;
+      function goTo(next) {
+        if (next === current) return;
+        next = (next + slides.length) % slides.length;
+        const outgoing = slides[current];
+        const incoming = slides[next];
+        incoming.classList.add("active");
+        gsap.to(outgoing, { autoAlpha: 0, duration: 0.5, ease: "power2.inOut", onComplete: () => outgoing.classList.remove("active") });
+        gsap.fromTo(incoming, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "power2.inOut" });
+        dots[current].classList.remove("active");
+        dots[next].classList.add("active");
+        if (caption) caption.textContent = incoming.dataset.caption || "";
+        current = next;
+      }
+      prevBtn.addEventListener("click", () => goTo(current - 1));
+      nextBtn.addEventListener("click", () => goTo(current + 1));
+      dots.forEach(dot => dot.addEventListener("click", () => goTo(parseInt(dot.dataset.index, 10))));
+      root.addEventListener("keydown", e => {
+        if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+        if (e.key === "ArrowRight") { e.preventDefault(); goTo(current + 1); }
+      });
+    })();
 
     // Content scroll reveals
     const revealEls = document.querySelectorAll(".project-content .anim-hidden, .doc-card, .project-diagram, .next-project");
