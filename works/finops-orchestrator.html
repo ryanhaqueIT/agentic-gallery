@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOps Remediation Orchestrator — Ryan Haque</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .project-hero {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 140px 64px 80px;
+    }
+
+    .project-title {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 64px;
+      font-weight: 500;
+      line-height: 68px;
+      color: rgba(246, 243, 240, 0.88);
+      margin-bottom: 16px;
+    }
+
+    .project-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      line-height: 28px;
+      color: rgba(246, 243, 240, 0.4);
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .project-hero-image {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 64px;
+    }
+
+    .project-hero-image-inner {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 6px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .project-content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 64px;
+    }
+
+    .project-content p {
+      font-size: 16px;
+      letter-spacing: 0.4px;
+      line-height: 28px;
+      color: rgba(246, 243, 240, 0.64);
+      margin-bottom: 28px;
+    }
+
+    .project-content strong {
+      color: rgba(246, 243, 240, 0.88);
+      font-weight: 700;
+    }
+
+    .project-section-heading {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 36px;
+      color: rgba(246, 243, 240, 0.88);
+      margin: 60px 0 32px;
+    }
+
+    /* Document cards */
+    .docs-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .doc-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.04);
+      border-radius: 6px;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+
+    .doc-card:hover {
+      background: rgba(246, 243, 240, 0.07);
+    }
+
+    .doc-card-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .doc-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      background: rgba(246, 243, 240, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: rgba(246, 243, 240, 0.64);
+      flex-shrink: 0;
+    }
+
+    .doc-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: rgba(246, 243, 240, 0.88);
+      line-height: 20px;
+    }
+
+    .doc-card-desc {
+      font-size: 13px;
+      color: rgba(246, 243, 240, 0.32);
+      letter-spacing: 0.4px;
+      margin-top: 2px;
+    }
+
+    .doc-card-action {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(246, 243, 240, 0.64);
+      padding: 8px 12px;
+      border-radius: 32px;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.06);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Diagram images */
+    .project-diagram {
+      width: 100%;
+      border-radius: 6px;
+      margin: 24px 0;
+      background: rgba(246, 243, 240, 0.04);
+      border: 1px solid rgba(246, 243, 240, 0.04);
+      overflow: hidden;
+    }
+
+    .project-diagram-inner {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: rgba(246, 243, 240, 0.02);
+    }
+
+    .diagram-caption {
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(246, 243, 240, 0.32);
+      padding: 12px 24px;
+      text-align: center;
+    }
+
+    /* Next project */
+    .next-project {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 64px 80px;
+      border-top: 1px solid rgba(246, 243, 240, 0.04);
+    }
+
+    .next-label {
+      font-size: 12px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(246, 243, 240, 0.32);
+      margin-bottom: 12px;
+    }
+
+    .next-title {
+      font-family: "JW Serif", Georgia, serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: rgba(246, 243, 240, 0.88);
+      transition: opacity 0.3s ease;
+    }
+
+    .next-project a:hover .next-title {
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      .project-hero { padding: 120px 20px 60px; }
+      .project-title { font-size: 40px; line-height: 44px; }
+      .project-hero-image { padding: 0 20px; }
+      .project-content { padding: 60px 20px; }
+      .next-project { padding: 40px 20px 60px; }
+      .doc-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="universe"></div>
+  <div class="background-glow"></div>
+  <div class="cursor-halo"></div>
+
+  <div class="progressive-blur">
+    <div class="progressive-blur-panel is-1"></div>
+    <div class="progressive-blur-panel is-2"></div>
+    <div class="progressive-blur-panel is-3"></div>
+    <div class="progressive-blur-panel is-4"></div>
+    <div class="progressive-blur-panel is-5"></div>
+    <div class="progressive-blur-panel is-6"></div>
+    <div class="progressive-blur-panel is-7"></div>
+    <div class="progressive-blur-panel is-8"></div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar-wrapper">
+    <nav class="navbar anim-hidden">
+      <a href="../index.html" class="nav-logo">Ryan Haque</a>
+      <div class="nav-links">
+        <a href="../works.html" class="nav-link active">Works</a>
+        <a href="../notes.html" class="nav-link">Notes</a>
+        <a href="../about.html" class="nav-link">About</a>
+        <a href="../work-with-me.html" class="nav-link">Work with me</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="../works.html" class="active">Works</a>
+    <a href="../notes.html">Notes</a>
+    <a href="../about.html">About</a>
+    <a href="../work-with-me.html">Work with me</a>
+    <a href="../contact.html">Contact</a>
+  </div>
+
+  <!-- Project Hero -->
+  <div class="project-hero anim-hidden">
+    <a href="../works.html" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:400;letter-spacing:1px;text-transform:uppercase;color:rgba(246,243,240,0.4);margin-bottom:32px;transition:color 0.3s ease;" onmouseover="this.style.color='rgba(246,243,240,0.88)'" onmouseout="this.style.color='rgba(246,243,240,0.4)'">&larr; Back to works</a>
+    <h1 class="project-title">FinOps Remediation Orchestrator</h1>
+    <p class="project-subtitle">Automated cloud cost optimization — turning FinOps insights into deployed infrastructure changes with AI-assisted remediation.</p>
+    <div class="project-meta">
+      <div class="card-label"><span>Enterprise</span></div>
+      <div class="card-label"><span>FinOps</span></div>
+      <div class="card-label"><span>Infrastructure Automation</span></div>
+    </div>
+  </div>
+
+  <!-- Hero image -->
+  <div class="project-hero-image anim-hidden">
+    <div class="project-hero-image-inner" style="background: linear-gradient(145deg, #0a1628 0%, #1a5c3a 40%, #2ecc71 80%, #a8e6cf 100%);"></div>
+  </div>
+
+  <!-- Project narrative -->
+  <div class="project-content">
+    <p class="anim-hidden">Organizations identify cloud cost optimization opportunities every day — and fail to implement them. The gap between <strong>FinOps insight</strong> and <strong>engineering action</strong> is weeks of manual work: reviewing recommendations, mapping resources to infrastructure definitions, writing configuration changes, and shepherding them through CI/CD. Most recommendations expire before they're implemented.</p>
+
+    <p class="anim-hidden">The <strong>Automated FinOps Remediation Orchestrator</strong> closes that gap. It ingests optimization recommendations from analytics platforms, enriches them with ownership and environment metadata, uses AI to generate the correct infrastructure-as-code changes, and submits pull requests with estimated savings, risk assessment, and rollback instructions — all automatically.</p>
+
+    <p class="anim-hidden">The result: remediation time drops from weeks to hours. Adoption rate climbs from ~30% to 70%+. Every change carries a full audit trail. And the engineering team reviews 15-minute PRs instead of spending 2-4 hours per recommendation on manual remediation.</p>
+
+    <!-- Documents Section -->
+    <h2 class="project-section-heading anim-hidden">Project Documents</h2>
+
+    <div class="docs-grid">
+      <a href="../doc-viewer.html?back=works/finops-orchestrator.html&file=docs/finops/finops-prd.md&title=FinOps%20Remediation%20Orchestrator%20PRD&label=PRD" class="doc-card anim-hidden">
+        <div class="doc-card-left">
+          <div class="doc-icon">PRD</div>
+          <div>
+            <div class="doc-card-title">Product Requirements Document</div>
+            <div class="doc-card-desc">22-section PRD: executive summary, architecture, functional requirements, governance model, business value analysis</div>
+          </div>
+        </div>
+        <div class="doc-card-action">View</div>
+      </a>
+
+      <a href="../doc-viewer.html?back=works/finops-orchestrator.html&file=docs/finops/finops-prd.md&title=Business%20Value%20Analysis&label=Value" class="doc-card anim-hidden">
+        <div class="doc-card-left">
+          <div class="doc-icon">BV</div>
+          <div>
+            <div class="doc-card-title">Business Value Analysis</div>
+            <div class="doc-card-desc">Current vs proposed capability matrix, operational/financial/governance/engineering value</div>
+          </div>
+        </div>
+        <div class="doc-card-action">View</div>
+      </a>
+
+      <div class="doc-card anim-hidden" style="pointer-events:none;opacity:0.5;">
+        <div class="doc-card-left">
+          <div class="doc-icon">HLD</div>
+          <div>
+            <div class="doc-card-title">Architecture Diagram</div>
+            <div class="doc-card-desc">High-level design, logical architecture flow, component boundaries</div>
+          </div>
+        </div>
+        <div class="doc-card-action">Coming</div>
+      </div>
+
+      <div class="doc-card anim-hidden" style="pointer-events:none;opacity:0.5;">
+        <div class="doc-card-left">
+          <div class="doc-icon">TDD</div>
+          <div>
+            <div class="doc-card-title">Technical Design Document</div>
+            <div class="doc-card-desc">System design, API specification, data model, deployment model</div>
+          </div>
+        </div>
+        <div class="doc-card-action">Coming</div>
+      </div>
+    </div>
+
+    <!-- Solution Diagrams -->
+    <h2 class="project-section-heading anim-hidden">Remediation Architecture</h2>
+
+    <div class="project-diagram anim-hidden">
+      <div class="project-diagram-inner" style="background: linear-gradient(135deg, rgba(46, 204, 113, 0.12), rgba(246, 243, 240, 0.03));"></div>
+      <div class="diagram-caption">End-to-end remediation flow — recommendation to deployment</div>
+    </div>
+
+    <div class="project-diagram anim-hidden">
+      <div class="project-diagram-inner" style="background: linear-gradient(135deg, rgba(246, 243, 240, 0.03), rgba(46, 204, 113, 0.12));"></div>
+      <div class="diagram-caption">Governance model — risk-tiered approval workflow</div>
+    </div>
+
+    <div class="project-diagram anim-hidden">
+      <div class="project-diagram-inner" style="background: linear-gradient(135deg, rgba(46, 204, 113, 0.08), rgba(246, 243, 240, 0.05));"></div>
+      <div class="diagram-caption">Integration layer — analytics to IaC pipeline</div>
+    </div>
+  </div>
+
+  <!-- Next project -->
+  <div class="next-project anim-hidden">
+    <div class="next-label">Next</div>
+    <a href="project-coral.html">
+      <div class="next-title">Project Coral</div>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer anim-hidden">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="copyright">&copy; 2026 Ryan Haque</span>
+        <nav class="footer-links">
+          <a href="../about.html" class="footer-link">About</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Privacy</a>
+        </nav>
+      </div>
+      <nav class="footer-social">
+        <a href="https://au.linkedin.com/in/ryan-haque-0aba9313a" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/ryanhaqueIT" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/ryanhaque449893" class="footer-link" target="_blank" rel="noopener">X</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/gsap.min.js"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.14.2/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Cursor halo
+    const halo = document.querySelector(".cursor-halo");
+    document.addEventListener("mousemove", e => {
+      gsap.to(halo, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power2.out" });
+    });
+
+    // Navbar
+    gsap.fromTo(".navbar", { y: -60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.2 });
+
+    // Hero
+    gsap.fromTo(".project-hero", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.4 });
+    gsap.fromTo(".project-hero-image", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, ease: "power3.out", delay: 0.6 });
+
+    // Content scroll reveals
+    const revealEls = document.querySelectorAll(".project-content .anim-hidden, .doc-card, .project-diagram, .next-project");
+    gsap.set(revealEls, { y: 40, autoAlpha: 0 });
+    ScrollTrigger.batch(revealEls, {
+      interval: 0.08, batchMax: 3,
+      onEnter: batch => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, overwrite: true }),
+      start: "top 90%"
+    });
+
+    // Footer
+    gsap.fromTo(".footer", { autoAlpha: 0, y: 20 }, { scrollTrigger: { trigger: ".footer", start: "top 96%", once: true }, autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" });
+
+    // Mobile menu
+    const navToggle = document.querySelector(".nav-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    let menuOpen = false;
+    navToggle.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      navToggle.classList.toggle("open", menuOpen);
+      if (menuOpen) {
+        document.body.style.overflow = "hidden";
+        gsap.to(mobileMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+        gsap.from(mobileMenu.querySelectorAll("a"), { y: 20, opacity: 0, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.1 });
+      } else {
+        document.body.style.overflow = "";
+        gsap.to(mobileMenu, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+      }
+    });
+  </script>
+
+</body>
+</html>
