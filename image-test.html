@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Treatment Test</title>
+  <style>
+    @font-face {
+      font-family: "JW Sans";
+      src: url("https://cdn.prod.website-files.com/6969058e00fa5f2cbbc12aa9/69690a6bb93f15276cfb093a_McQueenGrotesk-Regular.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "JW Sans", Arial, sans-serif;
+      background: #010008;
+      color: rgba(246, 243, 240, 0.88);
+    }
+
+    .switcher {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
+      display: flex; gap: 6px; background: rgba(246,243,240,0.06);
+      border: 1px solid rgba(246,243,240,0.08); border-radius: 1440px; padding: 5px;
+      flex-wrap: wrap; justify-content: center; max-width: 95%;
+    }
+    .switcher button {
+      font-family: "JW Sans", Arial, sans-serif; font-size: 11px; font-weight: 400;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      color: rgba(246,243,240,0.5); background: transparent; border: none;
+      padding: 8px 14px; border-radius: 1440px; cursor: pointer; transition: all 0.3s ease;
+    }
+    .switcher button.active { background: rgba(246,243,240,0.1); color: rgba(246,243,240,0.95); }
+    .switcher button:hover { color: rgba(246,243,240,0.8); }
+
+    .preview {
+      padding: 120px 40px 60px;
+      display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+    }
+
+    .card {
+      width: 300px; border-radius: 6px; overflow: hidden;
+      position: relative; flex-shrink: 0;
+    }
+    .card-img {
+      width: 100%; aspect-ratio: 4/5;
+      background-size: contain; background-repeat: no-repeat;
+      background-position: center; background-color: #010008;
+      transition: filter 0.5s ease, opacity 0.5s ease;
+    }
+
+    .card-label {
+      text-align: center; padding: 12px 0; font-size: 11px;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(246,243,240,0.4);
+    }
+
+    .info {
+      text-align: center; padding: 20px 40px 40px; max-width: 600px; margin: 0 auto;
+    }
+    .info h2 {
+      font-size: 18px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.3px; margin-bottom: 8px;
+    }
+    .info p { font-size: 14px; color: rgba(246,243,240,0.4); line-height: 22px; }
+
+    /* Treatments */
+    .treatment-none .card-img { }
+
+    .treatment-dim .card-img {
+      filter: brightness(0.7) contrast(1.1);
+    }
+
+    .treatment-vignette .card-img {
+      mask-image: radial-gradient(ellipse 85% 85% at center, black 50%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 85% at center, black 50%, transparent 100%);
+    }
+
+    .treatment-border .card {
+      border: 1px solid rgba(246,243,240,0.08);
+      background: rgba(246,243,240,0.03);
+      padding: 12px;
+    }
+    .treatment-border .card-img {
+      border-radius: 4px;
+      filter: brightness(0.85);
+    }
+
+    .treatment-blend .card-img {
+      filter: brightness(0.6) contrast(1.2) saturate(0.8);
+      opacity: 0.85;
+    }
+
+    .treatment-invert .card-img {
+      filter: invert(0.88) hue-rotate(180deg) brightness(0.95) contrast(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="switcher">
+    <button class="active" onclick="setTreatment('none',this)">Current (raw)</button>
+    <button onclick="setTreatment('dim',this)">A: Dim</button>
+    <button onclick="setTreatment('vignette',this)">B: Vignette fade</button>
+    <button onclick="setTreatment('border',this)">C: Glass frame</button>
+    <button onclick="setTreatment('blend',this)">D: Dark blend</button>
+    <button onclick="setTreatment('invert',this)">E: Dark mode invert</button>
+  </div>
+
+  <div class="preview" id="preview">
+    <div class="card">
+      <div class="card-img" style="background-image: url('docs/finops/finops-hero.png');"></div>
+      <div class="card-label">FinOps</div>
+    </div>
+    <div class="card">
+      <div class="card-img" style="background-image: url('docs/project-coral-hero.png');"></div>
+      <div class="card-label">Project Coral</div>
+    </div>
+    <div class="card">
+      <div class="card-img" style="background-image: url('docs/harness-engineering/harness-hero.png');"></div>
+      <div class="card-label">Harness Engineering</div>
+    </div>
+    <div class="card">
+      <div class="card-img" style="background-image: url('docs/wedding-os/images/wedding-os-hero.png');"></div>
+      <div class="card-label">Wedding OS</div>
+    </div>
+  </div>
+
+  <div class="info" id="info">
+    <h2>Current (raw)</h2>
+    <p>No treatment. Light infographics sit directly on the dark background.</p>
+  </div>
+
+  <script>
+    const descriptions = {
+      none: { title: "Current (raw)", desc: "No treatment. Light infographics sit directly on the dark background. High contrast, jarring." },
+      dim: { title: "A: Dim", desc: "brightness(0.7) + contrast(1.1). Darkens the image so it doesn't feel like a flashlight. Text stays readable. Simple, effective." },
+      vignette: { title: "B: Vignette fade", desc: "Radial gradient mask fades the edges into the dark background. Centre stays crisp, edges dissolve. Premium gallery feel." },
+      border: { title: "C: Glass frame", desc: "Subtle glass border + padding + slight dim. Image feels 'framed' rather than raw. Matches the navbar's glass aesthetic." },
+      blend: { title: "D: Dark blend", desc: "Heavy dim + desaturation. Image becomes atmospheric rather than informational. Good for mood, loses some readability." },
+      invert: { title: "E: Dark mode invert", desc: "Inverts colors so light backgrounds become dark. Surprisingly effective for infographics. Changes the color palette entirely." }
+    };
+
+    function setTreatment(name, btn) {
+      document.getElementById('preview').className = 'preview treatment-' + name;
+      document.querySelectorAll('.switcher button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const d = descriptions[name];
+      document.getElementById('info').innerHTML = `<h2>${d.title}</h2><p>${d.desc}</p>`;
+    }
+  </script>
+</body>
+</html>
