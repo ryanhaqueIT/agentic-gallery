@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDO × HappyRobot — engagement status board</title>
+<style>
+  :root{--page:#fafaf8;--panel:#ffffff;--card:#ffffff;--ink:#111110;--ink2:#4b4a46;--muted:#8a8983;
+    --line:#e6e5df;--border:#e2e1db;--accent:#2a78d6;
+    --green:#16a34a;--greenF:#e8f7ee;--amber:#d97706;--amberF:#fdf4e3;--red:#dc2626;--redF:#fdecec;
+    --blue:#2563eb;--blueF:#eaf1fe;--code:#f4f4f1;--shadow:0 1px 2px rgba(0,0,0,.05)}
+  html.dark{--page:#0f0f0e;--panel:#1c1c1b;--card:#1c1c1b;--ink:#f4f4f0;--ink2:#c3c2b7;--muted:#8a8983;
+    --line:#2a2a28;--border:#2e2e2b;--accent:#3987e5;
+    --green:#34d073;--greenF:#0f2417;--amber:#f0a33a;--amberF:#2a1f0b;--red:#ef4444;--redF:#2d1212;
+    --blue:#5a9bf0;--blueF:#12233b;--code:#141413;--shadow:0 1px 2px rgba(0,0,0,.35)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:ui-sans-serif,system-ui,"Segoe UI",sans-serif;font-size:13.5px;line-height:1.5}
+  .mono{font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+  header{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
+  .crumb{font-size:11.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .crumb b{color:var(--ink)}
+  .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--ink2)}
+  .pill .d{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .hbtn{border:1px solid var(--border);background:var(--card);color:var(--ink2);border-radius:8px;padding:6px 11px;cursor:pointer;font:inherit;font-size:11px}
+  main{max-width:1320px;margin:0 auto;padding:18px 20px 50px}
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start}
+  .col{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+  .col h2{font-size:11px;margin:2px 4px 12px;display:flex;align-items:center;gap:8px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em}
+  .col h2 .n{margin-left:auto;color:var(--muted);font-weight:400}
+  .colpill{font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .cp-g{background:var(--greenF);color:var(--green)} .cp-a{background:var(--amberF);color:var(--amber)}
+  .cp-r{background:var(--red);color:#fff} .cp-b{background:var(--blueF);color:var(--blue)}
+  .cardx{background:var(--card);border:1px solid var(--border);border-left-width:3px;border-radius:9px;padding:10px 12px;margin-bottom:9px;box-shadow:var(--shadow)}
+  .b-g{border-left-color:var(--green)} .b-a{border-left-color:var(--amber)} .b-r{border-left-color:var(--red)} .b-b{border-left-color:var(--blue)}
+  .cardx .t{font-weight:650;font-size:12.5px}
+  .cardx .d{color:var(--ink2);font-size:11.5px;margin-top:4px}
+  .cardx .s{color:var(--muted);font-size:10px;margin-top:7px;font-family:ui-monospace,Consolas,monospace}
+  .newflag{font-size:9px;font-weight:700;color:var(--blue);background:var(--blueF);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+  footer{text-align:center;color:var(--muted);font-size:10.5px;padding:22px;border-top:1px solid var(--line);font-family:ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+<header>
+  <span class="crumb">Engagements / <b>AIDO (WeddingOS)</b> / Status board</span>
+  <span class="sp"></span>
+  <span class="pill"><span class="d" style="background:var(--green)"></span>run on record · v5 Production</span>
+  <button class="hbtn" onclick="flipTheme()">◐ light / dark</button>
+  <button class="hbtn" onclick="copyBoard()">⧉ copy board as markdown</button><span id="ok" style="color:var(--green);font-size:11px"></span>
+</header>
+<main>
+  <div class="board" id="board"></div>
+</main>
+<footer>as of 2026-07-04 · sources: implementation-status.md · telephony-going-live.md · platform Runs view (screenshots 2026-07-04) · canonical data lives in the engagement pack — this page is a regenerable view</footer>
+<script>
+const COLS=[
+ {key:"g",pill:"cp-g",border:"b-g",title:"Proven",titlePill:"Completed",items:[
+  {t:"Real run on the record — Version 5, Production",d:"Run #9c6cf636 Completed Jun 25, 13:08 (1:48, 4 steps): web call → Emma answers → load_persona webhook fires (0:11–0:12) → conversation flows. Three Failed runs on v1/v3 preceded it — the ledger is honest.",s:"platform Runs view (screenshot 2026-07-04)",nw:true},
+  {t:"persona Lambda deployed + Active",d:"weddingos-hr-persona reuses get_vendor_context lookup logic. 7/7 unit tests; direct invoke → 200.",s:"implementation-status §1"},
+  {t:"API Gateway ingress live",d:"curl → 200 + persona / 401 no-key / 404 unmapped. (Lambda Function URLs org-blocked → API GW is the front door.)",s:"implementation-status §1, §6"},
+  {t:"End-to-end: number → persona",d:"+61 •• ••• 204 → Prism Cinema / “Gladis” — soul 7,425 chars, principles 8,243.",s:"implementation-status §1"},
+  {t:"Vendor mapping row added",d:"phone_number#+61 •• ••• 683 → 94c8e418. One DynamoDB write per vendor number.",s:"telephony-going-live “already done”"}]},
+ {key:"a",pill:"cp-a",border:"b-a",title:"Pending / verify",titlePill:"In progress",items:[
+  {t:"Persona hydration on live call — VERIFY",d:"In run #9c6cf636 load_persona fired, but the greeting was generic (“Hi there! Thanks for calling…”), not “Gladis from Prism Cinema”. Likely to_number empty on a web call, or prompt not consuming the tool result. Check the run's Graph tab: what did load_persona return?",s:"run transcript (screenshot 2026-07-04) — the risk the demo spec flagged",nw:true},
+  {t:"Workflow shows 2 Issues in editor",d:"Editor badge on v5 — open Issues panel and clear both before demoing.",s:"editor view (screenshot 2026-07-04)",nw:true},
+  {t:"calendar + post-call still on httpbin mock",d:"check_availability and post-call webhooks point at mocks; swap to the real Option-B shims.",s:"implementation-status §7.4"},
+  {t:"Auth hardening pending",d:"Static X-API-Key → bearer/OAuth2 (HR webhook supports it). Rotate + Secrets Manager before real use.",s:"implementation-status §7.3 + secrets note"}]},
+ {key:"r",pill:"cp-r",border:"b-r",title:"Blocked — external",titlePill:"Failed-state",items:[
+  {t:"PSTN phone call cannot reach Emma yet",d:"No inbound SIP trunk; the Twilio number's voice URL still points at GCP prod (correct until launch).",s:"implementation-status §4"},
+  {t:"Path B (BYO number) needs HR support",d:"HappyRobot never publishes its inbound SIP host self-serve (verified: MCP, console form, docs). BYO-carrier is a support handshake.",s:"telephony-going-live “missing-context finding”"},
+  {t:"AU numbers need an Approved regulatory bundle",d:"Org bundles are in Draft — not submitted, not usable. Draft → Submit → Pending → Approved takes hours–days. US Regular numbers buy instantly.",s:"telephony-going-live “regulatory bundles”"}]},
+ {key:"b",pill:"cp-b",border:"b-b",title:"Next — in order",titlePill:"Queued",items:[
+  {t:"1 · Verify persona hydration on a live call",d:"Open run #9c6cf636 → Graph: inspect load_persona result + whether the prompt consumed it. If to_number is empty on web calls, pin a demo number or test via the US phone path.",s:"replaces “get a run” — that's done",nw:true},
+  {t:"2 · Prove the phone path on a US number",d:"Buy US Regular in HR (instant), add Inbound-to-Number trigger + set the Call field (the #1 missed step), map number → vendor, call it.",s:"telephony-going-live Path A"},
+  {t:"3 · Submit the AU bundle in parallel",d:"Compliance → Business Profile: business details, local AU address, rep, ID docs → Submit → buy AU numbers once Approved.",s:"telephony-going-live “regulatory bundles”"},
+  {t:"4 · Swap mocks for real adapters, then harden auth",d:"Point check_availability + post-call at the Option-B shims; then X-API-Key → OAuth2.",s:"implementation-status §7.3–7.4"}]}
+];
+const board=document.getElementById("board");
+COLS.forEach(c=>{
+  const d=document.createElement("div");d.className="col";
+  d.innerHTML="<h2><span class='colpill "+c.pill+"'>"+c.titlePill+"</span> "+c.title+" <span class='n'>"+c.items.length+"</span></h2>"+
+    c.items.map(i=>"<div class='cardx "+c.border+"'><div class='t'>"+i.t+(i.nw?"<span class='newflag'>NEW</span>":"")+"</div><div class='d'>"+i.d+"</div><div class='s'>— "+i.s+"</div></div>").join("");
+  board.appendChild(d);
+});
+function copyBoard(){
+  let md="# AIDO × HappyRobot — status board (2026-07-04)\n";
+  COLS.forEach(c=>{md+="\n## "+c.title+"\n";c.items.forEach(i=>md+="- **"+i.t+"** — "+i.d+" _("+i.s+")_\n");});
+  const done=()=>{document.getElementById("ok").textContent=" ✓ copied";setTimeout(()=>document.getElementById("ok").textContent="",1400)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(md).then(done).catch(()=>{fb(md);done()});}else{fb(md);done();}
+}
+function fb(t){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}ta.remove();}
+function flipTheme(){const d=!document.documentElement.classList.contains("dark");document.documentElement.classList.toggle("dark",d);try{localStorage.setItem("aidoTheme",d?"dark":"light")}catch(e){}}
+let p=null;try{p=localStorage.getItem("aidoTheme")}catch(e){}
+if(p?p==="dark":matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("dark");
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDO × HappyRobot — demo spec: persona-by-number</title>
+<style>
+  :root{--page:#fafaf8;--panel:#ffffff;--card:#ffffff;--ink:#111110;--ink2:#4b4a46;--muted:#8a8983;
+    --line:#e6e5df;--border:#e2e1db;--accent:#2a78d6;--accentF:#eaf1fe;
+    --green:#16a34a;--greenF:#e8f7ee;--amber:#d97706;--amberF:#fdf4e3;--red:#dc2626;--redF:#fdecec;
+    --bubbleMe:#1c1c1b;--bubbleMeInk:#ffffff;--bubbleAg:#f1f1ee;--bubbleAgInk:#2b2a27;
+    --code:#f4f4f1;--shadow:0 1px 2px rgba(0,0,0,.05)}
+  html.dark{--page:#0f0f0e;--panel:#1c1c1b;--card:#1c1c1b;--ink:#f4f4f0;--ink2:#c3c2b7;--muted:#8a8983;
+    --line:#2a2a28;--border:#2e2e2b;--accent:#3987e5;--accentF:#12233f;
+    --green:#34d073;--greenF:#0f2417;--amber:#f0a33a;--amberF:#2a1f0b;--red:#ef4444;--redF:#2d1212;
+    --bubbleMe:#f4f4f0;--bubbleMeInk:#111110;--bubbleAg:#262624;--bubbleAgInk:#d6d5cc;
+    --code:#141413;--shadow:0 1px 2px rgba(0,0,0,.35)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:ui-sans-serif,system-ui,"Segoe UI",sans-serif;font-size:13.5px;line-height:1.55}
+  .mono{font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+  header{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
+  .crumb{font-size:11.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .crumb b{color:var(--ink)}
+  .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--ink2)}
+  .pill .d{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .hbtn{border:1px solid var(--border);background:var(--card);color:var(--ink2);border-radius:8px;padding:6px 11px;cursor:pointer;font:inherit;font-size:11px}
+  main{max-width:900px;margin:0 auto;padding:18px 20px 60px}
+  h2{font-size:13px;margin:26px 0 10px;font-weight:650}
+  .hero{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:14px}
+  .hero .big{font-size:15px;font-weight:700}
+  .hero .why{color:var(--ink2);font-size:12px;margin-top:5px;max-width:540px}
+  .cta{background:var(--bubbleMe);color:var(--bubbleMeInk);border:none;border-radius:9px;padding:12px 20px;
+    font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none;display:inline-block}
+  .verify{border:1.5px solid var(--amber);background:var(--amberF);border-radius:12px;padding:14px 16px;margin:14px 0;display:flex;gap:12px}
+  .verify .fl{color:var(--amber);font-weight:700;white-space:nowrap;font-family:ui-monospace,Consolas,monospace;font-size:11px}
+  .verify p{margin:0;font-size:12.5px;color:var(--ink2)}
+  .verify b{color:var(--ink)}
+  .tablecard{border:1px solid var(--border);border-radius:12px;background:var(--card);overflow:hidden;box-shadow:var(--shadow)}
+  .trow{display:grid;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:baseline}
+  .trow:last-child{border-bottom:none}
+  .thead{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,Consolas,monospace;background:var(--page)}
+  .gPre{grid-template-columns:210px 120px 1fr}
+  .gScr{grid-template-columns:70px 150px 1fr}
+  .gRsk{grid-template-columns:220px 1fr 1fr}
+  .trow .k{font-weight:650;font-size:12px}
+  .trow .v{color:var(--ink2);font-size:12px}
+  .tm{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--muted)}
+  .stpill{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+  .st-ok{background:var(--greenF);color:var(--green)}
+  .st-wn{background:var(--amberF);color:var(--amber)}
+  .st-bl{background:var(--red);color:#fff}
+  .bubble{border-radius:12px;padding:8px 12px;font-size:12px;display:inline-block;max-width:96%;margin:3px 0}
+  .me{background:var(--bubbleMe);color:var(--bubbleMeInk);border-bottom-right-radius:4px}
+  .emma{background:var(--bubbleAg);color:var(--bubbleAgInk);border-bottom-left-radius:4px}
+  .who{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,Consolas,monospace;display:block;margin-top:6px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow)}
+  .card h3{font-size:12px;margin:0 0 8px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.03em}
+  ul{margin:6px 0;padding-left:20px;color:var(--ink2);font-size:12.5px}
+  li{margin:4px 0}
+  footer{text-align:center;color:var(--muted);font-size:10.5px;padding:22px;border-top:1px solid var(--line);font-family:ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+<header>
+  <span class="crumb">Engagements / <b>AIDO (WeddingOS)</b> / Demo spec</span>
+  <span class="sp"></span>
+  <span class="pill"><span class="d" style="background:var(--green)"></span>Emma v5 · Live · Production</span>
+  <button class="hbtn" onclick="flipTheme()">◐ light / dark</button>
+</header>
+<main>
+
+<div class="hero">
+  <div>
+    <div class="big">▶ Do the last thing first: web-call Emma — $0, no phone number needed</div>
+    <div class="why">The demo hangs on one moment: Emma answers as <b>“Gladis from Prism Cinema”</b> — a persona loaded live from DynamoDB, keyed on the number, zero vendor-specific deploy. Everything else is supporting cast.</div>
+  </div>
+  <a class="cta" href="https://platform.happyrobot.ai/fderyanhaque/workflows/mii6dlly77ni" target="_blank">Open Emma → Test → Web call</a>
+</div>
+
+<div class="verify">
+  <span class="fl">⚠ VERIFY FIRST</span>
+  <p><b>Run #9c6cf636 (Jun 25, v5, Completed) greeted generically</b> — “Hi there! Thanks for calling…”, not Gladis — even though <span class="mono">load_persona</span> fired at 0:11. Before demoing to anyone: open that run's <b>Graph</b> tab and check what the webhook returned. Two usual suspects: <span class="mono">to_number</span> is empty on a web call (→ adapter 404 → generic fallback), or the prompt isn't consuming <span class="mono">{{persona.response.*}}</span>. Fix, re-run privately, hear Gladis, then book the demo.</p>
+</div>
+
+<h2>Prerequisites — honest state</h2>
+<div class="tablecard">
+  <div class="trow gPre thead"><span>Prerequisite</span><span>State</span><span>Detail</span></div>
+  <div class="trow gPre"><span class="k">persona adapter live</span><span><span class="stpill st-ok">✓ Proven</span></span><span class="v">Lambda Active, 7/7 tests; API GW curl → 200/401/404 <span class="tm">[impl §1]</span></span></div>
+  <div class="trow gPre"><span class="k">vendor mapping exists</span><span><span class="stpill st-ok">✓ Done</span></span><span class="v">phone_number#+61 •• ••• 683 → 94c8e418 (Prism Cinema) <span class="tm">[telephony]</span></span></div>
+  <div class="trow gPre"><span class="k">workflow published</span><span><span class="stpill st-ok">✓ v5 Live</span></span><span class="v">Version 5 · Production · Completed run on record <span class="tm">[Runs view screenshot 2026-07-04]</span></span></div>
+  <div class="trow gPre"><span class="k">persona hydration verified</span><span><span class="stpill st-wn">⚠ Verify</span></span><span class="v">Run #9c6cf636 greeted generically — see the callout above. This is the gate.</span></div>
+  <div class="trow gPre"><span class="k">editor issues cleared</span><span><span class="stpill st-wn">⚠ 2 open</span></span><span class="v">Editor shows “2 Issues” on v5 — open the panel and clear them <span class="tm">[editor screenshot]</span></span></div>
+  <div class="trow gPre"><span class="k">calendar + post-call</span><span><span class="stpill st-wn">⚠ Mock</span></span><span class="v">Still httpbin — frame as “wired, endpoint swap pending”; never present a booking as real <span class="tm">[impl §7.4]</span></span></div>
+  <div class="trow gPre"><span class="k">phone path</span><span><span class="stpill st-bl">Not needed</span></span><span class="v">Web call is browser WebRTC; SIP/number purchase is go-live, not demo <span class="tm">[telephony]</span></span></div>
+</div>
+
+<h2>Minute-by-minute script</h2>
+<div class="tablecard">
+  <div class="trow gScr thead"><span>Time</span><span>Beat</span><span>Say / do</span></div>
+  <div class="trow gScr"><span class="tm">−0:05</span><span class="k">Set the trap</span><span>
+    <span class="bubble me">I haven't told this agent who it is. Watch it find out from the number.</span><span class="who">you — to the room</span></span></div>
+  <div class="trow gScr"><span class="tm">0:00</span><span class="k">THE PROOF</span><span>Start the web call. Say nothing. Emma must open hydrated:
+    <br><span class="bubble emma">Hi, this is Gladis from Prism Cinema — how can I help with your wedding plans?</span><span class="who">emma — expected greeting · if generic, abort: hydration gate failed</span></span></div>
+  <div class="trow gScr"><span class="tm">0:20</span><span class="k">Show the machinery</span><span>
+    <span class="bubble me">That greeting was a live lookup — dialed number → vendor-mappings → vendors → a 7,000-character personality, loaded before the first word.</span><span class="who">you — to the room</span></span></div>
+  <div class="trow gScr"><span class="tm">0:45</span><span class="k">Availability ask</span><span>
+    <span class="bubble me">Are you free Saturday the 18th?</span><span class="who">you — to emma · check_availability fires (mock)</span>
+    <br><span class="bubble me">The tool call is real; the endpoint behind it swaps from mock to the calendar Lambda this week.</span><span class="who">you — to the room</span></span></div>
+  <div class="trow gScr"><span class="tm">1:30</span><span class="k">Wrap the call</span><span class="v">End call → post-call hop fires (mock). Narrate what ships next: transcript → DynamoDB → OpenClaw → drafted email + WhatsApp.</span></div>
+  <div class="trow gScr"><span class="tm">+2:00</span><span class="k">The receipt</span><span>Open the run in <b>Runs</b> — the same view as your screenshot: steps, timings, transcript, tool results.
+    <br><span class="bubble me">Every call becomes structured, searchable data. This is the audit trail — and the QBR evidence.</span><span class="who">you — to the room</span></span></div>
+</div>
+
+<h2>What this demo proves — and doesn't yet</h2>
+<div class="grid2">
+  <div class="card">
+    <h3 style="color:var(--green)">✓ PROVES</h3>
+    <ul>
+      <li>One workflow, all vendors — persona resolved at call-start, no per-vendor deploy</li>
+      <li>HappyRobot ↔ AWS pattern end-to-end (webhook → API GW → Lambda → DynamoDB)</li>
+      <li>No AWS credentials ever handed to HappyRobot (X-API-Key adapter)</li>
+      <li>Runs are captured and queryable — the audit trail exists from day one</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3 style="color:var(--amber)">⚠ DOESN'T PROVE YET</h3>
+    <ul>
+      <li>Real calendar booking (mock until the Option-B shim ships)</li>
+      <li>Post-call brain pipeline firing from a HappyRobot run (mock)</li>
+      <li>A real PSTN call reaching Emma (needs US number or SIP trunk)</li>
+      <li>Production auth posture (X-API-Key → OAuth2 pending)</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Risks — check before demoing to anyone</h2>
+<div class="tablecard">
+  <div class="trow gRsk thead"><span>Risk</span><span>Why</span><span>Mitigation</span></div>
+  <div class="trow gRsk"><span class="k">Persona loads after (or without) the greeting</span><span class="v">Observed in run #9c6cf636: load_persona fired, greeting stayed generic. Design relies on hydration before Emma's first turn <span class="tm">[persona-flow Notes]</span></span><span class="v">Inspect the run Graph; verify prompt consumes {{persona.response.*}}; private re-run until you hear Gladis.</span></div>
+  <div class="trow gRsk"><span class="k">Web call carries no dialed number</span><span class="v">Persona keys on to_number; a browser call may leave it empty → adapter 404 → generic fallback <span class="tm">[impl §4]</span></span><span class="v">If confirmed: pin a default number for web-call demos, or demo on the US phone path.</span></div>
+  <div class="trow gRsk"><span class="k">test_node success ≠ run success</span><span class="v">test_node runs nodes in isolation with pinned values; only a live session exercises trigger + variable flow <span class="tm">[impl §6]</span></span><span class="v">Only claim what a real run shows — you now have one; keep it that way per change.</span></div>
+</div>
+
+<footer>as of 2026-07-04 · sources: persona-by-number-flow.md · implementation-status.md · telephony-going-live.md · platform screenshots 2026-07-04 · this page is a regenerable view</footer>
+</main>
+<script>
+function flipTheme(){const d=!document.documentElement.classList.contains("dark");document.documentElement.classList.toggle("dark",d);try{localStorage.setItem("aidoTheme",d?"dark":"light")}catch(e){}}
+let p=null;try{p=localStorage.getItem("aidoTheme")}catch(e){}
+if(p?p==="dark":matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("dark");
+</script>
+</body>
+</html>

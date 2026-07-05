@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDO × HappyRobot — engagement dashboard</title>
+<style>
+  :root{
+    --page:#fafaf8; --canvas:#fbfbf9; --panel:#ffffff; --card:#ffffff;
+    --ink:#111110; --ink2:#4b4a46; --muted:#8a8983;
+    --line:#e6e5df; --border:#e2e1db; --dot:rgba(0,0,0,.075); --edge:#c4c3bb;
+    --accent:#2a78d6; --accentF:#eaf1fe;
+    --live:#2563eb; --liveF:#eaf1fe; --new:#16a34a; --newF:#e8f7ee;
+    --old:#d97706; --oldF:#fdf4e3; --ext:#9ca3af; --extF:#f4f4f2;
+    --red:#dc2626; --redF:#fdecec;
+    --side:#141413; --sideInk:#c9c8c0; --sideMut:#7c7b74; --sideHi:rgba(255,255,255,.09);
+    --code:#f4f4f1; --shadow:0 1px 2px rgba(0,0,0,.05);
+  }
+  html.dark{
+    --page:#0f0f0e; --canvas:#151514; --panel:#1c1c1b; --card:#1c1c1b;
+    --ink:#f4f4f0; --ink2:#c3c2b7; --muted:#8a8983;
+    --line:#2a2a28; --border:#2e2e2b; --dot:rgba(255,255,255,.06); --edge:#4c4b45;
+    --accent:#3987e5; --accentF:#12233f;
+    --live:#5a9bf0; --liveF:#12233b; --new:#34d073; --newF:#0f2417;
+    --old:#f0a33a; --oldF:#2a1f0b; --ext:#6f6f6a; --extF:#232322;
+    --red:#ef4444; --redF:#2d1212;
+    --side:#0b0b0a; --sideInk:#c9c8c0; --sideMut:#6f6e68; --sideHi:rgba(255,255,255,.09);
+    --code:#141413; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,"Segoe UI",sans-serif;font-size:13.5px;line-height:1.5;display:flex;min-height:100vh}
+  .mono{font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+  aside.side{width:200px;flex-shrink:0;background:var(--side);color:var(--sideInk);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:14px 10px;overflow-y:auto}
+  .brand{padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:12px}
+  .brand .t{font-size:12.5px;font-weight:650;color:#fff;display:flex;align-items:center;gap:7px}
+  .brand .t .dot{width:7px;height:7px;border-radius:50%;background:var(--old);display:inline-block}
+  .brand .s{font-size:10px;color:var(--sideMut);margin-top:3px;font-family:ui-monospace,Consolas,monospace}
+  .navlab{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--sideMut);padding:10px 8px 5px;font-family:ui-monospace,Consolas,monospace}
+  .nav button,.nav a{display:flex;width:100%;text-align:left;border:none;background:none;color:var(--sideInk);
+    font:inherit;font-size:12.5px;padding:7px 10px;border-radius:7px;cursor:pointer;align-items:center;gap:8px;text-decoration:none}
+  .nav button:hover,.nav a:hover{background:rgba(255,255,255,.05)}
+  .nav button.on{background:var(--sideHi);color:#fff;font-weight:600}
+  .nav .glyph{width:14px;text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--sideMut)}
+  .nav button.on .glyph{color:#fff}
+  .sidefoot{margin-top:auto;padding:10px 8px;border-top:1px solid rgba(255,255,255,.08);
+    font-size:10px;color:var(--sideMut);font-family:ui-monospace,Consolas,monospace}
+  .content{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 20px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+  .crumb{font-size:11.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .crumb b{color:var(--ink);font-weight:600}
+  .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;
+    padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--ink2)}
+  .pill .d{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
+  .seg button{border:none;background:none;color:var(--muted);font:inherit;font-size:10.5px;font-weight:600;
+    padding:6px 11px;cursor:pointer;font-family:ui-monospace,Consolas,monospace}
+  .seg button.on{background:var(--ink);color:var(--page)}
+  .hbtn{border:1px solid var(--border);background:var(--card);color:var(--ink2);border-radius:8px;
+    padding:6px 11px;cursor:pointer;font:inherit;font-size:11px}
+  main{padding:18px 20px 50px;flex:1}
+  .view{display:none}.view.on{display:block}
+  h2{font-size:13px;margin:22px 0 8px;font-weight:650}
+  h2:first-child{margin-top:4px}
+  .sub{color:var(--muted);font-size:11.5px;margin:-4px 0 12px}
+  .callout{border:1px solid var(--old);background:var(--oldF);border-radius:10px;padding:13px 15px;margin:10px 0;font-size:12.5px;display:flex;gap:10px}
+  .callout .fl{color:var(--old);font-weight:700;white-space:nowrap;font-family:ui-monospace,Consolas,monospace;font-size:11px}
+  .tablecard{border:1px solid var(--border);border-radius:10px;background:var(--card);overflow:hidden;box-shadow:var(--shadow)}
+  .trow{display:grid;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:center}
+  .trow:last-child{border-bottom:none}
+  .thead{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,Consolas,monospace;border-bottom:1px solid var(--line);background:var(--page)}
+  .g3{grid-template-columns:1fr 230px 80px}
+  .g3e{grid-template-columns:240px 200px 1fr}
+  .cellmono{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+  .off{font-family:ui-monospace,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--old);
+    border:1px solid var(--old);border-radius:5px;padding:2px 7px;width:max-content}
+  .statuspill{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+  .sp-live{background:var(--liveF);color:var(--live)}
+  .sp-new{background:var(--newF);color:var(--new)}
+  .sp-old{background:var(--oldF);color:var(--old)}
+  .sp-ext{background:var(--extF);color:var(--muted)}
+  .sp-red{background:var(--red);color:#fff}
+  .sp-acc{background:var(--accentF);color:var(--accent)}
+  .now{border:1.5px solid var(--accent);background:var(--accentF);border-radius:12px;padding:13px 16px;margin:6px 0 16px;
+    display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+  .now .fl{color:var(--accent);font-weight:700;font-family:ui-monospace,Consolas,monospace;font-size:11px;white-space:nowrap}
+  .now p{margin:0;font-size:12.5px;color:var(--ink2)}
+  .now b{color:var(--ink)}
+  .stages{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr;gap:0;align-items:stretch}
+  @media(max-width:1000px){.stages{grid-template-columns:1fr}.stages .arr{transform:rotate(90deg);margin:2px auto}}
+  .stage{background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+  .stage .nhead{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line);
+    font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--accent);font-weight:700}
+  .stage .nhead .npill{margin-left:auto}
+  .stage .nb{padding:9px 11px;flex:1}
+  .stage .nb .nm{font-weight:650;font-size:12.5px}
+  .stage .nb .ds{color:var(--ink2);font-size:11.5px;margin-top:4px}
+  .stage .nb .out{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--muted);margin-top:7px}
+  .stage .nb .nt{font-size:10.5px;margin-top:6px;color:var(--ink2)}
+  .arr{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+  .gateline{text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--muted);margin:8px 0 2px}
+  .fnote{font-size:11.5px;color:var(--muted);margin:10px 2px 0;max-width:900px}
+  .fnote b{color:var(--ink2)}
+  .roi{border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  .layer{display:grid;grid-template-columns:130px 1fr 1fr;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card)}
+  .layer:last-child{border-bottom:none}
+  .layer .ln{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:11px}
+  .layer .who,.layer .aido{font-size:11.5px;color:var(--ink2)}
+  .layer .who b,.layer .aido b{display:block;font-size:10px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;font-weight:700}
+  .moves .trow{grid-template-columns:34px 1fr 130px}
+  .mv{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--muted)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:10.5px;color:var(--ink2);margin:2px 0 12px;font-family:ui-monospace,Consolas,monospace}
+  .legend .sw{width:10px;height:10px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:5px;border:1px solid}
+  .maplayout{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(300px,1fr);gap:16px;align-items:start}
+  @media(max-width:1100px){.maplayout{grid-template-columns:1fr}}
+  .gcanvas{position:relative;background:var(--canvas);border:1px solid var(--border);border-radius:12px;padding:28px 20px;
+    background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:20px 20px}
+  .gcanvas svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .gcanvas svg path.vis{fill:none;stroke:var(--edge);stroke-width:1.4px;transition:opacity .18s}
+  .gcanvas svg path.hit{fill:none;stroke:transparent;stroke-width:14px;pointer-events:stroke;cursor:pointer}
+  .gcanvas svg polygon{fill:var(--edge);transition:opacity .18s}
+  .groupbox{position:absolute;border:1.5px dashed var(--edge);border-radius:14px;z-index:0;transition:opacity .18s}
+  .groupbox .gl{position:absolute;top:-8px;left:14px;background:var(--canvas);padding:0 7px;
+    font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .gtiers{position:relative;display:grid;z-index:2}
+  .gtier{display:grid;gap:16px}
+  .node{background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;position:relative;
+    box-shadow:var(--shadow);transition:opacity .2s,box-shadow .15s;overflow:hidden;border-left-width:3px}
+  .node .nhead{display:flex;align-items:center;gap:6px;padding:5px 10px;border-bottom:1px solid var(--line);
+    font-family:ui-monospace,Consolas,monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .node .nhead .npill{margin-left:auto}
+  .node .nbody{padding:8px 10px;font-size:12px;font-weight:600;line-height:1.35}
+  .n-live{border-left-color:var(--live)} .n-new{border-left-color:var(--new)}
+  .n-unchanged{border-left-color:var(--old)} .n-external{border-left-color:var(--ext)}
+  .node.master{border-color:var(--accent);border-left-color:var(--accent)}
+  .node.master .nhead{color:var(--accent)}
+  .node:hover,.node.sel{box-shadow:0 0 0 2px var(--accent)}
+  .ghost{opacity:.15;pointer-events:none}
+  .chip{position:absolute;z-index:3;transform:translate(-50%,-50%);background:var(--card);border:1px solid var(--border);
+    border-radius:6px;padding:2.5px 8px;font-size:9.5px;font-weight:600;color:var(--muted);white-space:nowrap;cursor:pointer;
+    font-family:ui-monospace,Consolas,monospace;box-shadow:var(--shadow);transition:opacity .18s}
+  .chip:hover,.chip.sel{border-color:var(--accent);color:var(--accent)}
+  .gpanel{position:sticky;top:74px;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:16px;min-height:280px;box-shadow:var(--shadow)}
+  .gpanel h3{margin:0 0 8px;font-size:13.5px;font-weight:650;line-height:1.35}
+  .gpanel .k{color:var(--muted);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;margin:13px 0 4px;font-family:ui-monospace,Consolas,monospace}
+  .gpanel p{margin:3px 0;color:var(--ink2);font-size:12px}
+  .authbox{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;background:var(--code);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;color:var(--ink2);white-space:pre-wrap}
+  blockquote{margin:6px 0;padding:6px 0 6px 12px;border-left:2px solid var(--accent);color:var(--ink2);font-size:12px;font-style:italic}
+  .src{color:var(--muted);font-size:10.5px;font-style:normal;font-family:ui-monospace,Consolas,monospace}
+  .flagrow{font-size:11.5px;color:var(--ink2);margin:4px 0;font-family:ui-monospace,Consolas,monospace}
+  .flagrow .fl{color:var(--old);font-weight:700}
+  .cbtns{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+  .empty{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 8px;color:var(--muted)}
+  .empty .g{font-size:20px;font-family:ui-monospace,Consolas,monospace}
+  .covband{margin:6px 0 16px}
+  .covband .bl{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,Consolas,monospace;margin:0 0 7px}
+  .covcells{display:flex;flex-wrap:wrap;gap:10px}
+  .covcell{flex:1 1 178px;min-width:168px;background:var(--card);border:1px solid var(--border);border-left-width:3px;border-radius:9px;box-shadow:var(--shadow);padding:9px 11px;cursor:pointer;transition:box-shadow .15s}
+  .covcell:hover,.covcell.sel{box-shadow:0 0 0 2px var(--accent)}
+  .cv-filled{border-left-color:var(--new)} .cv-partial{border-left-color:var(--old)}
+  .cv-empty{border-left-color:var(--red)} .cv-na{border-left-color:var(--ext)}
+  .covcell .ch{display:flex;gap:6px;align-items:center;font-family:ui-monospace,Consolas,monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .covcell .ch .npill{margin-left:auto}
+  .covcell .cb{font-size:11.5px;color:var(--ink2);margin-top:5px}
+  .covcell details{margin-top:6px}
+  .covcell summary{font-size:10px;color:var(--accent);cursor:pointer;font-family:ui-monospace,Consolas,monospace}
+  .covcell .mn{font-size:9.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;margin-top:5px}
+  .qcard{display:grid;grid-template-columns:30px 1fr 160px;gap:12px;align-items:baseline;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .qcard:last-child{border-bottom:none}
+  .qcard .qn{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--muted)}
+  .qcard .qt{font-size:12.5px;color:var(--ink)}
+  .qcard .qw{font-size:10.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;margin-top:3px}
+  .sigrow{display:grid;grid-template-columns:130px 1fr 140px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);align-items:start}
+  .sigrow:last-child{border-bottom:none}
+  .sigtype{font-family:ui-monospace,Consolas,monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+  .chan{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:4px;border:1px solid var(--border);color:var(--muted);font-family:ui-monospace,Consolas,monospace;margin-left:6px}
+  footer{border-top:1px solid var(--line);padding:12px 20px;font-size:10.5px;color:var(--muted);text-align:center;font-family:ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+
+<aside class="side">
+  <div class="brand">
+    <div class="t"><span class="dot"></span>AIDO × HappyRobot</div>
+    <div class="s">engagement dashboard · 2026-07-05</div>
+  </div>
+  <div class="navlab">Engagement</div>
+  <nav class="nav" id="nav">
+    <button data-v="flow" class="on"><span class="glyph">⇢</span>Engagement flow</button>
+    <button data-v="discovery"><span class="glyph">◈</span>Discovery</button>
+    <button data-v="signals"><span class="glyph">⚡</span>Signals</button>
+    <button data-v="strategy"><span class="glyph">◎</span>Strategy</button>
+    <button data-v="map"><span class="glyph">⛶</span>Systems map</button>
+    <button data-v="integrations"><span class="glyph">⇄</span>Integrations</button>
+  </nav>
+  <div class="navlab">Related views</div>
+  <nav class="nav">
+    <a href="aido-status-board.html" target="_blank"><span class="glyph">▦</span>Status board</a>
+    <a href="aido-demo-spec.html" target="_blank"><span class="glyph">▶</span>Demo spec</a>
+  </nav>
+  <div class="navlab">View</div>
+  <nav class="nav">
+    <button onclick="flipTheme()"><span class="glyph">◐</span>Light / dark</button>
+  </nav>
+  <div class="sidefoot">⎔ FDE · Ryan Haque<br>regenerated by the fde pipeline<br>(today: by hand · soon: /fde-* skills)</div>
+</aside>
+
+<div class="content">
+  <div class="topbar">
+    <span class="crumb">Engagements / <b>AIDO (WeddingOS)</b> / <span id="crumbTab">Engagement flow</span></span>
+    <span class="sp"></span>
+    <span class="pill"><span class="d" style="background:var(--live)"></span>stage: demo · gate: verify hydration</span>
+    <div class="seg" id="modeSeg">
+      <button id="bBefore" class="on" onclick="setMode('before')">BEFORE — GCP prod today</button>
+      <button id="bAfter" onclick="setMode('after')">AFTER — Emma flag-gated</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- ============ ENGAGEMENT FLOW ============ -->
+    <section class="view on" id="flow">
+      <div class="now">
+        <span class="fl">▶ WHERE WE ARE</span>
+        <p><b>Demo stage, at the verification gate.</b> Run <span class="mono">#9c6cf636</span> (v5, Production, Completed) proved the pipeline end-to-end but greeted generically — persona hydration must be verified before demoing to anyone. Upstream discovery and mapping are done; integration is half-built (persona adapter live, calendar/post-call shims pending).</p>
+      </div>
+
+      <h2>The FDE pipeline — four stages, a human gate between each</h2>
+      <p class="sub">You fire each stage by hand; it reads the previous artifact, does its work, and regenerates this dashboard. Reviewing the artifact IS the gate.</p>
+      <div class="stages" id="stages"></div>
+      <div class="gateline">artifact ─ you review ─ next stage · nothing advances without you</div>
+
+      <h2>Discovery flow — /fde-prep + /fde-map</h2>
+      <p class="sub">Click any node for the detail and evidence. The transcript gate is where full conversational context enters the pack.</p>
+      <div class="maplayout">
+        <div class="gcanvas" id="disc-canvas"><svg></svg><div class="gtiers"></div></div>
+        <div class="gpanel" id="disc-panel"></div>
+      </div>
+      <p class="fnote"><b>The Palantir lesson is baked in:</b> the data-access ask ships on day one because data access, not engineering, kills pilots. And the flow never guesses — thin inputs degrade to a gap list of interview questions, and everything that reaches the pack carries a citation.</p>
+
+      <h2>Integration flow — /fde-integrate</h2>
+      <p class="sub">From inventory flags to a reversible go-live. AIDO is the living proof: adapter deployed, prod untouched, master switch not yet flipped — by design.</p>
+      <div class="maplayout">
+        <div class="gcanvas" id="integ-canvas"><svg></svg><div class="gtiers"></div></div>
+        <div class="gpanel" id="integ-panel"></div>
+      </div>
+      <p class="fnote"><b>Every customer integration ends the same way:</b> shipped dark, all flags OFF, one runtime switch to go live, and flipping it back is instant. The rollback story is part of the sale.</p>
+    </section>
+
+    <!-- ============ STRATEGY ============ -->
+    <section class="view" id="strategy">
+      <h2>The ROI stack — value is layered, dollars are only the floor</h2>
+      <p class="sub">From your FDE — ROI &amp; Business Value model: lead with hard dollars to clear finance, stack the other layers to win the room.</p>
+      <div class="roi">
+        <div class="layer"><span class="ln" style="color:var(--live)">STRATEGIC</span>
+          <span class="who"><b>WHO BUYS IT</b>CEO — optionality, moat, every call becomes data</span>
+          <span class="aido"><b>AIDO TRANSLATION</b>One Emma workflow scales to every vendor with a DynamoDB row — new vendor onboarding becomes a data entry, not a deploy.</span></div>
+        <div class="layer"><span class="ln" style="color:var(--new)">EXPERIENCE</span>
+          <span class="who"><b>WHO BUYS IT</b>COO / Ops — callers always get through; humans do higher-value work</span>
+          <span class="aido"><b>AIDO TRANSLATION</b>Vendors never miss an enquiry call; Emma answers 24/7 as *their* studio, in their voice (soul_md / principles_md).</span></div>
+        <div class="layer"><span class="ln" style="color:var(--old)">RISK</span>
+          <span class="who"><b>WHO BUYS IT</b>Compliance / Legal — consistent process, audit trail</span>
+          <span class="aido"><b>AIDO TRANSLATION</b>Every call captured as a structured run (transcript, tool calls, timings) — the Runs view is the audit trail; no AWS credentials ever leave AWS.</span></div>
+        <div class="layer"><span class="ln" style="color:var(--red)">DOLLARS</span>
+          <span class="who"><b>WHO BUYS IT</b>CFO — capture &gt; labor &gt; margin (the floor that clears finance)</span>
+          <span class="aido"><b>AIDO TRANSLATION</b>Every missed vendor call was a booking enquiry dropped at full margin; capture is the number to baseline before go-live (calls/mo × miss % × booking value).</span></div>
+      </div>
+
+      <h2>The sequence of moves — land, prove, expand</h2>
+      <div class="tablecard moves">
+        <div class="trow"><span class="mv">1</span><span>Verify persona hydration on a live web call — hear “Gladis from Prism Cinema”, not a generic greeting. <span class="cellmono" style="color:var(--muted)">run #9c6cf636 Graph tab → what did load_persona return?</span></span><span><span class="statuspill sp-live">IN PROGRESS</span></span></div>
+        <div class="trow"><span class="mv">2</span><span>Demo on the web-call path ($0, no number) — demo-as-spec: it exposes the seams to close next.</span><span><span class="statuspill sp-ext">QUEUED</span></span></div>
+        <div class="trow"><span class="mv">3</span><span>Prove the phone path on a US number (instant purchase) while the AU regulatory bundle goes Draft → Submit → Approved in parallel.</span><span><span class="statuspill sp-ext">QUEUED</span></span></div>
+        <div class="trow"><span class="mv">4</span><span>Swap mocks for the real Option-B shims (calendar + post-call), then harden X-API-Key → OAuth2.</span><span><span class="statuspill sp-ext">QUEUED</span></span></div>
+        <div class="trow"><span class="mv">5</span><span>Go live dark: flags ON in HR env, then flip the Twilio voice URL — the one-switch, reversible cutover.</span><span><span class="statuspill sp-ext">QUEUED</span></span></div>
+        <div class="trow"><span class="mv">6</span><span>Expand: one workflow, N vendors — each new vendor is a number purchase + one DynamoDB mapping row.</span><span><span class="statuspill sp-old">THE PRIZE</span></span></div>
+      </div>
+      <p class="sub" style="margin-top:10px">Sources: FDE — ROI &amp; Business Value.md · telephony-going-live.md · implementation-status.md</p>
+    </section>
+
+    <!-- ============ DISCOVERY (coverage → ask next) ============ -->
+    <section class="view" id="discovery">
+      <div class="callout" style="border-color:var(--accent);background:var(--accentF)">
+        <span class="fl" style="color:var(--accent)">◈ HOW IT FILLS</span>
+        <span>EMPTY → SUGGESTED (pipeline finds citable evidence in a transcript/doc — rendered as a suggestion) → VALIDATED (you confirm it). Nothing renders without a quote + source; suggested and validated never look the same; scoring grades evidence strength (buyer-confirmed by 2+ people beats a lone mention), not whether a field has words in it.</span>
+      </div>
+      <h2>Coverage — MEDDICC + the technical layer no sales framework has</h2>
+      <p class="sub">Click a cell → the side panel opens with its evidence, what a strong entry contains, and the questions that fill it. FILLED needs corroboration (2+ mentions or explicit confirmation) — one weak mention is coverage theater.</p>
+      <div class="maplayout">
+        <div style="min-width:0">
+          <div id="covgrid"></div>
+          <h2>Ask next — generated from the gaps, Mom-Test rules</h2>
+          <p class="sub">Past-specific, quantifying, commitment-seeking. Compliments are not signal.</p>
+          <div id="asknext"></div>
+        </div>
+        <div class="gpanel" id="cov-panel"></div>
+      </div>
+    </section>
+
+    <!-- ============ SIGNALS (insight ledger) ============ -->
+    <section class="view" id="signals">
+      <div class="callout" style="border-color:var(--accent);background:var(--accentF)">
+        <span class="fl" style="color:var(--accent)">⚡ THE RULE</span>
+        <span>One row per canonical insight, deduped across conversations. Every row carries a verbatim quote + source. Lifecycle: new → corroborated → validated → addressed-in-demo. Only commitments advance a deal — “sounds great” is noise.</span>
+      </div>
+      <h2>Insight ledger — everything we've learned, with receipts</h2>
+      <div id="sigledger"></div>
+    </section>
+
+    <!-- ============ MAP ============ -->
+    <section class="view" id="map">
+      <div class="legend">
+        <span><span class="sw" style="background:var(--liveF);border-color:var(--live)"></span>LIVE PROD</span>
+        <span><span class="sw" style="background:var(--newF);border-color:var(--new)"></span>NEW — to build</span>
+        <span><span class="sw" style="background:var(--oldF);border-color:var(--old)"></span>UNCHANGED — reused</span>
+        <span><span class="sw" style="background:var(--extF);border-color:var(--ext)"></span>external</span>
+        <span style="border-left:1px solid var(--line);padding-left:14px;color:var(--ink)">every edge is labeled with its authentication</span>
+      </div>
+      <div class="maplayout">
+        <div class="gcanvas" id="map-canvas"><svg></svg><div class="gtiers"></div></div>
+        <div class="gpanel" id="map-panel"></div>
+      </div>
+    </section>
+
+    <!-- ============ INTEGRATIONS ============ -->
+    <section class="view" id="integrations">
+      <h2>New systems to build</h2>
+      <div id="int-new"></div>
+      <h2>Every authenticated edge</h2>
+      <div class="tablecard" id="int-edges">
+        <div class="trow g3e thead"><span>From ▶ To</span><span>Auth</span><span>Payload</span></div>
+      </div>
+      <h2>Ops safety — the blast-radius contract</h2>
+      <div class="callout"><span class="fl">⚑ GOLDEN CONSTRAINT</span><span id="ov-golden"></span></div>
+      <div class="tablecard" id="ov-flags">
+        <div class="trow g3 thead"><span>Flag</span><span>Lives in</span><span>Default</span></div>
+      </div>
+    </section>
+  </main>
+  <footer>canonical data lives in the engagement pack — this dashboard is a regenerable view, updated by each pipeline stage</footer>
+</div>
+
+<script>
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function pillClass(g){return g==="live"?"sp-live":g==="new"?"sp-new":g==="unchanged"?"sp-old":"sp-ext"}
+// PUBLIC COPY — engagement notes are private working documents, so doc citations render as
+// plain text here. In the working (local) version every citation deep-links to its source;
+// when /fde-map scans a repo it emits exact file:line links automatically.
+function srcHref(s){
+  if(/run #|Runs view|screenshot 2026/.test(s))return "https://platform.happyrobot.ai/fderyanhaque/workflows/mii6dlly77ni";
+  return null;
+}
+function srcTag(s){const h=srcHref(s);
+  return h?"<a class='src' style='color:var(--accent);text-decoration:none' href='"+h+"' target='_blank'>— "+esc(s)+" ↗</a>"
+          :"<span class='src'>— "+esc(s)+"</span>"}
+
+/* ================= ENGAGEMENT DATA ================= */
+const META={
+  engagement:"AIDO (WeddingOS) × HappyRobot", asOf:"2026-07-05",
+  status:"integration in flight — persona path proven; run on record (v5); demo gated on hydration verification; every prod-touching flag still OFF",
+  golden:"Current production voice path is GCP (Twilio → Gemini Live). Nothing may change or risk that path unless a flag is explicitly flipped.",
+  stages:[
+    {cmd:"/fde-prep",nm:"Prep — outside-in discovery",ds:"Account research, use-case + ROI hypothesis, interview kit, day-one data-access ask. Creates this dashboard (mostly empty — the flow and the unknowns).",out:"01-brief.md + dashboard v0",pill:"sp-new",pillTx:"DONE",nt:"AIDO context established from vault notes"},
+    {cmd:"/fde-map",nm:"Map — inside-out discovery",ds:"Deterministic scans + transcript mining + evidence-cited synthesis of systems, auth, and integration points.",out:"02-context-pack/ + systems map tab",pill:"sp-new",pillTx:"DONE",nt:"you're looking at its output — every map claim cites a source"},
+    {cmd:"/fde-demo",nm:"Demo — build on platform",ds:"Demo spec → your approval → build via MCP → test waves → web-call link.",out:"03-demo.md + demo-spec view + live agent",pill:"sp-live",pillTx:"IN PROGRESS",nt:"GATE: run #9c6cf636 greeted generically — verify persona hydration first"},
+    {cmd:"/fde-integrate",nm:"Integrate — production path",ds:"Adapters (Option B), credential checklist, ship-dark cutover plan, one-switch rollback.",out:"04-integration/",pill:"sp-old",pillTx:"PARTIAL",nt:"persona adapter LIVE ✓ · calendar/post-call shims + SIP path pending"}
+  ]
+};
+
+/* ---- systems map graph ---- */
+const MAPG={cols:4,rowGap:66,stagger:false,defaultText:"Click any node or edge label to inspect what it is, its authentication, and the evidence behind it.",
+ groups:[
+  {label:"NEW SURFACE — build at most one path",members:["persona","shims"],appearsIn:"after"},
+  {label:"EXISTING AWS — unchanged, reused",members:["bridges","brain"],appearsIn:"both"}],
+ nodes:[
+  {id:"caller",type:"☎ caller",label:"Caller",group:"external",tier:0,col:[2,4],appearsIn:"both",
+   what:"Wedding-vendor customer dialing the vendor's number."},
+  {id:"twilio",type:"◆ master switch",label:"Twilio number (AU) — voice URL decides everything",group:"external",tier:1,col:[2,4],appearsIn:"both",master:true,
+   what:"The vendor's phone number stays Twilio-owned. Its voice URL is the only runtime switch: GCP webhook (default) or HappyRobot SIP trunk (flag).",
+   k:"authentication",kv:"n/a — routing control, changed in Twilio console/provisioning",
+   flags:["Voice URL → GCP (default) | HR SIP trunk (when enabled). Instant, reversible."],
+   evidence:[{quote:"the master switch — points at GCP (prod) or HR SIP trunk. Instant, reversible.",source:"AIDO-architecture.md §4 Feature flags"}]},
+  {id:"gcp",type:"▣ voice agent",label:"GCP Cloud Run — Gemini Live + ADK agent",group:"live",badge:"LIVE PROD",tier:2,col:[1,3],appearsIn:"both",
+   what:"Today's production voice agent. Loads SOUL.md / Principles.md from S3 via WIF. Completely untouched by this integration (Option B).",
+   k:"authentication",kv:"Signs every AWS call with SigV4 over WIF temp credentials — the only principal allowed to invoke the bridge Lambdas today.",
+   evidence:[{quote:"GCP signs every call with SigV4 over WIF temp creds",source:"backend/bridge/aws_client.py:179 (cited in AIDO-architecture.md §0)"},
+             {quote:"GCP prod: completely untouched.",source:"AIDO-architecture.md §3 Option B"}]},
+  {id:"emma",type:"▣ voice agent",label:"HappyRobot “Emma” workflow (mii6dlly77ni)",group:"new",badge:"v5 LIVE",tier:2,col:[3,5],appearsIn:"after",
+   what:"One workflow serves all vendors: persona loaded at call-start keyed on the DIALED number — no deploy-time baking. Version 5 published to Production; Completed run on record.",
+   k:"authentication",kv:"Webhook nodes send plain HTTPS + X-API-Key. Cannot SigV4-sign; never receives AWS credentials.",
+   flags:["HAPPYROBOT_ENABLED=false (GCP hrClient.ts:17)","HR_API_KEY empty → client never constructs","HR_AWS_*_URL empty → webhook nodes inert"],
+   evidence:[{quote:"HappyRobot webhooks send plain HTTPS + headers; they cannot SigV4-sign or assume the GCP WIF role.",source:"AIDO-architecture.md §0"},
+             {quote:"Run #9c6cf636 Completed · Version 5 · Production — but greeting was generic; verify hydration.",source:"platform Runs view (screenshot 2026-07-04)"}]},
+  {id:"persona",type:"λ webhook adapter",label:"weddingos-hr-persona adapter",group:"new",badge:"DEPLOYED ✓",tier:3,col:[3,4],appearsIn:"after",
+   what:"Call-start persona lookup: dialed number → vendor-mappings → vendors → soul_md + principles_md + names. Re-runs the exact reads the live agent's get_vendor_context already uses.",
+   k:"authentication",kv:"Verifies X-API-Key, then reads DynamoDB with its own least-privilege IAM role.",
+   evidence:[{quote:"proven: +61 •• ••• 204 → Gladis / Prism Cinema, 7.4k-char soul + 8.2k-char principles",source:"persona-by-number-flow.md Notes"},
+             {quote:"deployed, Active … 7/7 unit tests; direct invoke → 200",source:"implementation-status.md §1"}]},
+  {id:"shims",type:"λ webhook adapter",label:"hr-calendar + hr-postcall shims (Option B)",group:"new",badge:"NEW",tier:3,col:[4,5],appearsIn:"after",
+   what:"Thin API-Gateway/Lambda front doors (~30 lines): verify X-API-Key, then IAM-invoke the EXISTING bridge Lambdas. A doorway problem, not a build problem.",
+   k:"authentication",kv:"In: X-API-Key shared secret. Out: lambda:InvokeFunction via the shim's own role.",
+   flags:["HR_BRIDGE_ENABLED=false → 503, or simply don't deploy the stack"],
+   evidence:[{quote:"verifies HR's X-API-Key … invokes the existing bridge_calendar / bridge_postcall via Lambda-to-Lambda IAM invoke",source:"AIDO-architecture.md §3 Option B"}]},
+  {id:"bridges",type:"λ lambda",label:"bridge_calendar + bridge_postcall Lambdas",group:"unchanged",badge:"UNCHANGED",tier:4,col:[1,4],appearsIn:"both",
+   what:"The actual business logic: calendar check/create; transcript → DynamoDB → OpenClaw → email draft + WhatsApp. Byte-for-byte the production Lambdas.",
+   k:"authentication",kv:"AWS_IAM Function URLs; handlers do no app-level auth.",
+   evidence:[{quote:"All 3 bridge Function URLs use AWS_IAM auth",source:"infrastructure/cdk_constructs/bridge_lambdas.py:261,:421,:515"},
+             {quote:"Both already exist and are fully reusable. We are NOT building those capabilities.",source:"AIDO-architecture.md §0"}]},
+  {id:"brain",type:"⛁ data & side-effects",label:"Google Calendar · DynamoDB · OpenClaw (Nova Pro v1) · Gmail · WhatsApp",group:"unchanged",badge:"UNCHANGED",tier:5,col:[1,5],appearsIn:"both",
+   what:"The downstream brain and side-effects. Zero changes.",k:"authentication",kv:"Reached only through the bridge Lambdas."}],
+ edges:[
+  {from:"caller",to:"twilio",auth:"PSTN",appearsIn:"both"},
+  {from:"twilio",to:"gcp",auth:"default route · media µ-law 8k",appearsIn:"both"},
+  {from:"twilio",to:"emma",auth:"flag: HAPPYROBOT_ENABLED · SIP trunk",appearsIn:"after"},
+  {from:"gcp",to:"bridges",auth:"SigV4 / WIF (mid + post-call)",appearsIn:"both"},
+  {from:"emma",to:"persona",auth:"X-API-Key",appearsIn:"after",
+   payload:"POST { number: to_number } → { soul_md, principles_md, business_name, assistant_name }"},
+  {from:"emma",to:"shims",auth:"X-API-Key",appearsIn:"after",
+   payload:"check_availability { vendor_id, date } · post-call { transcript }"},
+  {from:"persona",to:"brain",auth:"IAM (2 DynamoDB reads)",appearsIn:"after"},
+  {from:"shims",to:"bridges",auth:"IAM invoke",appearsIn:"after"},
+  {from:"bridges",to:"brain",auth:"existing prod paths",appearsIn:"both"}]};
+
+/* ---- discovery flow graph ---- */
+const DISCG={cols:5,rowGap:56,stagger:true,defaultText:"Click any node — the transcript gate is where full conversational context enters the pack.",
+ groups:[{label:"inputs/ — whatever the customer hands over",members:["b_repo","b_docs","b_data","b_conv","b_none"],appearsIn:"both"}],
+ nodes:[
+  {id:"prep",type:"▣ /fde-prep",label:"Research the account → use-case + ROI hypothesis",group:"new",badge:"OUTSIDE-IN",tier:0,col:[2,5],appearsIn:"both",
+   what:"Parallel research subagents sweep the company, vertical, tech-stack signals, and stakeholders; the ROI hypothesis (capture · labor · margin) sizes the prize before anyone talks.",
+   k:"writes",kv:"01-brief.md — hypothesis, stakeholder map, interview kit"},
+  {id:"ask",type:"◆ day-one gate",label:"DATA-ACCESS ASK + interview kit — sent day one",group:"external",tier:1,col:[2,5],appearsIn:"both",master:true,
+   what:"The Palantir lesson: pilots die on data-access politics, not engineering. The ask requests a static data cut, API docs, repo access where relevant, call recordings/chat exports, and flags the lead-time landmines (admin installs, connected-app approvals).",
+   k:"why day one",kv:"weeks of approval latency start ticking NOW, not when the build begins",
+   evidence:[{quote:"pilots sometimes consumed all 8–12 weeks just getting data access, and the final week scrambling to demo",source:"Nabeel Qureshi — Reflections on Palantir (research stream 1)"}]},
+  {id:"grants",type:"☎ customer",label:"Customer grants: access · docs · data cut · recordings",group:"external",tier:2,col:[2,5],appearsIn:"both",
+   what:"Whatever arrives lands in engagements/<customer>/inputs/. The flow branches on what actually exists — it never assumes."},
+  {id:"b_repo",type:"⌁ branch",label:"Repo access",group:"new",tier:3,col:[1,2],appearsIn:"both",
+   what:"Deterministic scans first, prose second: file tree, dependency manifests, API routes, env-var reads (the external-dependency surface), webhooks, auth mechanisms.",
+   k:"extracts",kv:"tree · deps · routes · env · auth → machine inventory"},
+  {id:"b_docs",type:"⌁ branch",label:"API docs",group:"new",tier:3,col:[2,3],appearsIn:"both",
+   what:"Endpoint + auth inventory from documentation: base URLs, auth schemes, rate limits, payload shapes — mapped against HappyRobot's integration mechanisms.",
+   k:"extracts",kv:"endpoints · auth schemes · payloads"},
+  {id:"b_data",type:"⌁ branch",label:"Data cut · notes",group:"new",tier:3,col:[3,4],appearsIn:"both",
+   what:"Schema and workflow extraction from CSV cuts and call notes: entity shapes, field names (their ontology), volumes, the actual-vs-documented workflow.",
+   k:"extracts",kv:"schemas · field names · volumes · workflow reality"},
+  {id:"b_conv",type:"◆ transcript gate",label:"Transcripts & conversations",group:"new",badge:"GATE",tier:3,col:[4,5],appearsIn:"both",master:true,
+   what:"The full-context gate: real calls, chat logs, and email threads are mined for personas, intents, objections, edge cases, tone and vocabulary — the tacit knowledge no API doc contains. GATED because it's the most sensitive input: consent + PII check before ingestion, and you review the extracted summary before it enters the pack.",
+   k:"gate checks → extracts",kv:"1) consent / PII scrub confirmed\n2) extract: personas · intents · objections · edge cases · vocabulary · actual workflow\n3) you review → conversation-context.md",
+   evidence:[{quote:"Run #9c6cf636 transcript is AIDO's first specimen: user joined, generic greeting, load_persona result visible in the run graph.",source:"platform Runs view (screenshot 2026-07-04) — pulled via monitor_runs"},
+             {quote:"Deploying AI into real businesses rarely fails because of models alone. It fails because of context.",source:"HappyRobot FDE blog (research stream 1)"}]},
+  {id:"b_none",type:"⌁ branch",label:"Nothing yet",group:"unchanged",tier:3,col:[5,6],appearsIn:"both",
+   what:"No inputs? The flow degrades gracefully: a gap list becomes new interview questions. The pack says 'unknown' — it never guesses.",
+   k:"emits",kv:"gap list → interview questions v2"},
+  {id:"synth",type:"✎ one writer",label:"Synthesis — ONE writer, every claim cited",group:"live",badge:"CITED",tier:4,col:[2,5],appearsIn:"both",
+   what:"Parallel readers, single writer (the Cognition lesson): one synthesis pass merges all branches so the pack can't contradict itself. Every claim carries file:line, doc page, or run/timestamp.",
+   k:"why one writer",kv:"parallel writers make conflicting implicit decisions — read-only fan-out, single merge"},
+  {id:"verify",type:"◆ review gate",label:"Entity-verify pass → YOU review the pack",group:"external",badge:"GATE",tier:5,col:[2,5],appearsIn:"both",master:true,
+   what:"Anti-hallucination pass: every named system, route, and field is checked against its source (the DeepWiki failure mode, designed out). Then the human gate — you read and edit the pack before anything downstream consumes it.",
+   k:"kills",kv:"hallucinated architecture · stale claims · unsourced systems"},
+  {id:"pack",type:"⛁ outputs",label:"02-context-pack/ + THIS DASHBOARD (map filled in)",group:"new",badge:"ARTIFACT",tier:6,col:[2,5],appearsIn:"both",
+   what:"pack.md (systems map + stakeholders) · inventory.json (system → HR mechanism → creds → lead-time flags) · domain-model.md (their ontology) · baseline.md (ROI denominator) · conversation-context.md — and this dashboard regenerated.",
+   k:"feeds",kv:"/fde-demo (personas, data, tools) · /fde-integrate (flags, adapters) · QBR (baseline)"}],
+ edges:[
+  {from:"prep",to:"ask",auth:"hypothesis shapes the ask"},
+  {from:"ask",to:"grants",auth:"sent day one · lead-times start"},
+  {from:"grants",to:"b_repo",auth:"repo?"},
+  {from:"grants",to:"b_docs",auth:"docs?"},
+  {from:"grants",to:"b_data",auth:"data?"},
+  {from:"grants",to:"b_conv",auth:"calls? chats?"},
+  {from:"grants",to:"b_none",auth:"nothing?"},
+  {from:"b_repo",to:"synth",auth:"machine inventory"},
+  {from:"b_docs",to:"synth",auth:"endpoint inventory"},
+  {from:"b_data",to:"synth",auth:"schemas + reality"},
+  {from:"b_conv",to:"synth",auth:"conversation context (post-gate)"},
+  {from:"b_none",to:"synth",auth:"gap list"},
+  {from:"synth",to:"verify",auth:"cited draft pack"},
+  {from:"verify",to:"pack",auth:"approved"}]};
+
+/* ---- integration flow graph ---- */
+const INTEGG={cols:4,rowGap:56,stagger:true,defaultText:"Click any node — the whole flow exists to make go-live boring: shipped dark, one switch, instant rollback.",
+ groups:[{label:"reversible by design",members:["dark","gate2","flip","livego"],appearsIn:"both"}],
+ nodes:[
+  {id:"flags",type:"⛳ from /fde-map",label:"inventory.json flags — ⚠ lead-time · ✖ blocked",group:"unchanged",badge:"INPUT",tier:0,col:[2,4],appearsIn:"both",
+   what:"The context pack already knows what's hard: which systems need admin installs, connected-app approvals, support handshakes, or adapters. Integration starts from flags, not surprises.",
+   k:"aido flags",kv:"✖ AWS ingress (Function URLs org-blocked → API GW) · ⚠ SIP host support-gated · ⚠ AU regulatory bundle"},
+  {id:"adapter",type:"λ scaffold",label:"Adapter scaffold — Option B pattern",group:"new",badge:"CODE",tier:1,col:[1,3],appearsIn:"both",
+   what:"HappyRobot speaks plain HTTPS only — it cannot SigV4-sign. So blocked systems get a thin doorway: API Gateway + ~30-line Lambda, X-API-Key in, IAM invoke out. TDD'd, isolated stack, reuses 100% of existing logic.",
+   k:"aido proof",kv:"weddingos-hr-persona: deployed · 7/7 tests · curl 200/401/404",
+   evidence:[{quote:"verifies HR's X-API-Key … invokes the existing bridge Lambdas via Lambda-to-Lambda IAM invoke",source:"AIDO-architecture.md §3 Option B"}]},
+  {id:"creds",type:"⛿ checklist",label:"Credential checklist — owner · lead time",group:"unchanged",badge:"CHASE EARLY",tier:1,col:[3,5],appearsIn:"both",
+   what:"Every credential with a named owner and a lead-time estimate, generated from the inventory flags. The ⚠ items get chased in week one — they're the ones that kill timelines in week six.",
+   k:"aido items",kv:"HR_API_KEY (vault) · AU bundle Draft→Submit→Approved · SIP host ← HR support"},
+  {id:"dark",type:"⚑ ship dark",label:"SHIP DARK — all flags default OFF",group:"new",badge:"SAFE",tier:2,col:[2,4],appearsIn:"both",
+   what:"Everything deploys inert: env-var flags OFF, adapters returning 503 or undeployed, webhook URLs empty → nodes no-op. Production coexistence with zero blast radius.",
+   k:"aido flags",kv:"HAPPYROBOT_ENABLED=false · HR_API_KEY empty · HR_AWS_*_URL empty · HR_BRIDGE_ENABLED=false"},
+  {id:"gate2",type:"◆ review gate",label:"YOU review the go-live runbook",group:"external",badge:"GATE",tier:3,col:[2,4],appearsIn:"both",master:true,
+   what:"The runbook states: what flips, in what order, how it's verified, and how it rolls back. Nothing goes live until you've read it. For a customer, this is the meeting where ops signs off.",
+   k:"must contain",kv:"flip order · verification call · rollback = flip back · who's on point"},
+  {id:"flip",type:"◆ master switch",label:"Flip ONE switch — Twilio voice URL → HR SIP trunk",group:"new",badge:"GO",tier:4,col:[2,4],appearsIn:"both",master:true,
+   what:"The number stays Twilio-owned; only its voice routing target changes. Re-aim, not re-buy. One console change moves real calls to Emma.",
+   k:"rollback",kv:"point the voice URL back at GCP — instant, no deploy, no data loss"},
+  {id:"livego",type:"● live",label:"LIVE — rollback ready, watching the first runs",group:"live",badge:"REVERSIBLE",tier:5,col:[2,4],appearsIn:"both",
+   what:"First calls watched in the Runs view (the audit trail from minute one). The old path stays warm — confidence comes from the flip-back being instant, not from hoping.",
+   k:"first checks",kv:"greeting hydrated? tools firing? transcripts landing? → then widen"}],
+ edges:[
+  {from:"flags",to:"adapter",auth:"✖ blocked → build the doorway"},
+  {from:"flags",to:"creds",auth:"⚠ lead-time → chase owners now"},
+  {from:"adapter",to:"dark",auth:"deployed, disabled"},
+  {from:"creds",to:"dark",auth:"creds staged per env"},
+  {from:"dark",to:"gate2",auth:"runbook drafted"},
+  {from:"gate2",to:"flip",auth:"approved"},
+  {from:"flip",to:"livego",auth:"one switch · instant"}]};
+
+/* ================= GRAPH FACTORY ================= */
+let mapMode="before";
+const graphs={};
+function buildGraph(key,G,canvasId,panelId,modeAware){
+  const canvas=document.getElementById(canvasId);
+  const svg=canvas.querySelector("svg");
+  const tiersEl=canvas.querySelector(".gtiers");
+  const panel=document.getElementById(panelId);
+  tiersEl.style.rowGap=G.rowGap+"px";
+  const maxTier=Math.max(...G.nodes.map(n=>n.tier));
+  const tierEls=[];
+  for(let t=0;t<=maxTier;t++){const d=document.createElement("div");d.className="gtier";
+    d.style.gridTemplateColumns="repeat("+G.cols+",1fr)";tiersEl.appendChild(d);tierEls.push(d);}
+  const inst={G,canvas,svg,panel,chips:[],groupEls:[],hovered:null,selEl:null,modeAware};
+  graphs[key]=inst;
+  G.nodes.forEach(n=>{
+    const d=document.createElement("div");
+    d.className="node n-"+n.group+(n.master?" master":"");d.id=key+"-n-"+n.id;
+    d.style.gridColumn=n.col[0]+" / "+n.col[1];
+    d.innerHTML="<div class='nhead'>"+esc(n.type)+(n.badge?"<span class='npill statuspill "+(n.master?"sp-acc":pillClass(n.group))+"'>"+esc(n.badge)+"</span>":"")+"</div>"+
+      "<div class='nbody'>"+esc(n.label)+"</div>";
+    d.onclick=()=>selectNode(inst,key,n);
+    d.onmouseenter=()=>{inst.hovered=n.id;applyHover(inst)};
+    d.onmouseleave=()=>{inst.hovered=null;applyHover(inst)};
+    tierEls[n.tier].appendChild(d);
+  });
+  defaultPanel(inst);
+  return inst;
+}
+function ghosted(inst,item){return inst.modeAware&&mapMode==="before"&&item.appearsIn==="after"}
+function drawGraph(inst,key){
+  const {G,canvas,svg}=inst;
+  svg.innerHTML="";inst.chips.forEach(c=>c.remove());inst.chips.length=0;
+  inst.groupEls.forEach(g=>g.remove());inst.groupEls.length=0;
+  const cb=canvas.getBoundingClientRect();
+  if(cb.width===0)return;
+  svg.setAttribute("viewBox","0 0 "+cb.width+" "+cb.height);
+  (G.groups||[]).forEach(g=>{
+    const rects=g.members.map(m=>document.getElementById(key+"-n-"+m).getBoundingClientRect());
+    const x1=Math.min(...rects.map(r=>r.left))-cb.left-12, y1=Math.min(...rects.map(r=>r.top))-cb.top-14;
+    const x2=Math.max(...rects.map(r=>r.right))-cb.left+12, y2=Math.max(...rects.map(r=>r.bottom))-cb.top+12;
+    const d=document.createElement("div");d.className="groupbox";
+    d.style.left=x1+"px";d.style.top=y1+"px";d.style.width=(x2-x1)+"px";d.style.height=(y2-y1)+"px";
+    d.innerHTML="<span class='gl'>"+esc(g.label)+"</span>";
+    if(ghosted(inst,g))d.style.opacity=.15;
+    canvas.appendChild(d);inst.groupEls.push(d);
+  });
+  G.edges.forEach((e,i)=>{
+    const A=document.getElementById(key+"-n-"+e.from).getBoundingClientRect();
+    const B=document.getElementById(key+"-n-"+e.to).getBoundingClientRect();
+    const x1=A.left+A.width/2-cb.left, y1=A.bottom-cb.top;
+    const x2=B.left+B.width/2-cb.left, y2=B.top-cb.top;
+    const mid=y1+(y2-y1)/2;
+    const dp="M"+x1+" "+y1+" V"+mid+" H"+x2+" V"+(y2-7);
+    const gh=ghosted(inst,e);
+    const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",dp);p.setAttribute("class","vis");p.dataset.i=i;
+    if(gh)p.style.opacity=.15;svg.appendChild(p);
+    const a=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    a.setAttribute("points",(x2-4.5)+","+(y2-8)+" "+(x2+4.5)+","+(y2-8)+" "+x2+","+(y2-1));
+    a.dataset.i=i;if(gh)a.style.opacity=.15;svg.appendChild(a);
+    const h=document.createElementNS("http://www.w3.org/2000/svg","path");
+    h.setAttribute("d",dp);h.setAttribute("class","hit");
+    if(!gh)h.addEventListener("click",()=>selectEdge(inst,e));svg.appendChild(h);
+    const c=document.createElement("div");
+    c.className="chip";c.textContent=e.auth;c.dataset.i=i;
+    const off=inst.G.stagger?((i%2)?-10:10):0;
+    c.style.left=((x1+x2)/2)+"px";c.style.top=(mid+off)+"px";
+    if(gh){c.style.opacity=.15;c.style.pointerEvents="none"}
+    c.onclick=()=>selectEdge(inst,e);
+    canvas.appendChild(c);inst.chips.push(c);
+  });
+  applyHover(inst);
+}
+function applyHover(inst){
+  inst.G.edges.forEach((e,i)=>{
+    if(ghosted(inst,e))return;
+    const touches=inst.hovered&&(e.from===inst.hovered||e.to===inst.hovered);
+    const op=inst.hovered?(touches?1:.35):1;
+    inst.svg.querySelectorAll("[data-i='"+i+"']").forEach(el=>{
+      el.style.opacity=op;
+      if(el.classList&&el.classList.contains("vis"))el.style.stroke=touches?"var(--accent)":"";
+      if(el.tagName==="polygon")el.style.fill=touches?"var(--accent)":"";
+    });
+    const chip=inst.chips.find(c=>c.dataset.i==i);
+    if(chip){chip.style.opacity=op;chip.style.color=touches?"var(--accent)":"";chip.style.borderColor=touches?"var(--accent)":""}
+  });
+}
+function defaultPanel(inst){
+  inst.panel.innerHTML="<div class='empty'><span class='g'>▶ ▼</span><span style='font-size:12.5px;max-width:250px;line-height:1.6'>"+esc(inst.G.defaultText)+"</span></div>";
+}
+function selectNode(inst,key,n){
+  inst.selEl&&inst.selEl.classList.remove("sel");
+  inst.selEl=document.getElementById(key+"-n-"+n.id);inst.selEl.classList.add("sel");
+  let h="<span class='statuspill "+(n.master?"sp-acc":pillClass(n.group))+"'>"+esc(n.badge||n.group.toUpperCase())+"</span>"+
+    "<h3 style='margin-top:8px'>"+esc(n.label)+"</h3>"+
+    "<div class='k'>what it is</div><p>"+esc(n.what||"")+"</p>";
+  if(n.kv)h+="<div class='k'>"+esc(n.k||"detail")+"</div><div class='authbox'>"+esc(n.kv)+"</div>";
+  if(n.flags)h+="<div class='k'>flags that gate it</div>"+n.flags.map(f=>"<div class='flagrow'><span class='fl'>⚑</span> "+esc(f)+"</div>").join("");
+  if(n.evidence)h+="<div class='k'>evidence — click to open the source</div>"+n.evidence.map(e=>"<blockquote>“"+esc(e.quote)+"”<br>"+srcTag(e.source)+"</blockquote>").join("");
+  h+="<div class='cbtns'><button class='hbtn' data-c='ev'>⧉ copy evidence</button><button class='hbtn' data-c='nd'>⧉ copy node as markdown</button></div>";
+  inst.panel.innerHTML=h;
+  inst.panel.querySelector("[data-c='ev']").onclick=(ev)=>copy((n.evidence||[]).map(e=>"> "+e.quote+"\n> — `"+e.source+"`").join("\n\n"),ev.target);
+  inst.panel.querySelector("[data-c='nd']").onclick=(ev)=>copy(nodeMd(n),ev.target);
+}
+function selectEdge(inst,e){
+  inst.selEl&&inst.selEl.classList.remove("sel");inst.selEl=null;
+  inst.panel.innerHTML="<div class='k' style='margin-top:0'>edge</div><h3>"+esc(nodeLabel(inst,e.from))+" <span style='color:var(--accent)'>▶</span> "+esc(nodeLabel(inst,e.to))+"</h3>"+
+    "<div class='k'>label</div><div class='authbox'>"+esc(e.auth)+"</div>"+
+    (e.payload?"<div class='k'>payload example</div><div class='authbox'>"+esc(e.payload)+"</div>":"");
+}
+function nodeLabel(inst,id){const n=inst.G.nodes.find(x=>x.id===id);return n?n.label.split(" — ")[0].split(" (")[0]:id}
+function nodeMd(n){
+  let md="## "+n.label+"\n\n**Status:** "+(n.badge||n.group)+"\n\n**What it is:** "+(n.what||"");
+  if(n.kv)md+="\n\n**"+(n.k||"Detail")+":** "+n.kv;
+  if(n.flags&&n.flags.length)md+="\n\n**Flags:**\n"+n.flags.map(f=>"- "+f).join("\n");
+  if(n.evidence&&n.evidence.length)md+="\n\n**Evidence:**\n\n"+n.evidence.map(e=>"> "+e.quote+"\n> — `"+e.source+"`").join("\n\n");
+  return md;
+}
+function copy(t,btn){
+  const done=()=>{if(btn){const o=btn.textContent;btn.textContent="✓ copied";setTimeout(()=>btn.textContent=o,1400);}};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(()=>{fbCopy(t);done()});}
+  else{fbCopy(t);done();}
+}
+function fbCopy(t){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+  document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}ta.remove();}
+
+/* ================= PAGE ASSEMBLY ================= */
+// stage strip
+const stEl=document.getElementById("stages");
+META.stages.forEach((s,i)=>{
+  const d=document.createElement("div");d.className="stage";
+  d.innerHTML="<div class='nhead'>"+esc(s.cmd)+"<span class='npill statuspill "+s.pill+"'>"+esc(s.pillTx)+"</span></div>"+
+    "<div class='nb'><div class='nm'>"+esc(s.nm)+"</div><div class='ds'>"+esc(s.ds)+"</div>"+
+    "<div class='out'>writes: "+esc(s.out)+"</div><div class='nt'>"+esc(s.nt)+"</div></div>";
+  stEl.appendChild(d);
+  if(i<META.stages.length-1){const a=document.createElement("div");a.className="arr";a.textContent="▶";stEl.appendChild(a);}
+});
+// ops safety (now lives in the integrations tab)
+document.getElementById("ov-golden").textContent=META.golden;
+const ovT=document.getElementById("ov-flags");
+MAPG.nodes.forEach(n=>(n.flags||[]).forEach(f=>{
+  const d=document.createElement("div");d.className="trow g3";
+  d.innerHTML="<span class='cellmono'>"+esc(f)+"</span><span style='font-size:12px;color:var(--ink2)'>"+esc(n.label)+"</span><span class='off'>OFF</span>";
+  ovT.appendChild(d);
+}));
+// integrations tab
+const intN=document.getElementById("int-new");
+MAPG.nodes.filter(n=>n.group==="new").forEach(n=>{
+  const d=document.createElement("div");d.className="tablecard";d.style.marginBottom="10px";d.style.padding="13px 15px";
+  d.innerHTML="<div style='display:flex;gap:10px;align-items:center;flex-wrap:wrap'><b style='font-size:13px'>"+esc(n.label)+
+    "</b><span class='statuspill sp-new'>"+esc(n.badge||"NEW")+"</span></div>"+
+    "<p style='color:var(--ink2);font-size:12.5px;margin:7px 0'>"+esc(n.what)+"</p>"+
+    "<div class='cellmono' style='color:var(--ink2)'>auth: "+esc(n.kv||"—")+"</div>"+
+    "<div class='cellmono' style='color:var(--ink2)'>flags: "+esc((n.flags||[]).join(" · ")||"—")+"</div>"+
+    "<div class='cellmono' style='color:var(--accent);margin-top:3px'>"+esc((n.evidence||[]).map(e=>e.source).join(" · "))+"</div>";
+  intN.appendChild(d);
+});
+const intE=document.getElementById("int-edges");
+MAPG.edges.filter(e=>e.auth!=="PSTN").forEach(e=>{
+  const d=document.createElement("div");d.className="trow g3e";
+  const nl=id=>{const n=MAPG.nodes.find(x=>x.id===id);return n?n.label.split(" — ")[0].split(" (")[0]:id};
+  d.innerHTML="<span style='font-size:12px;font-weight:600'>"+esc(nl(e.from))+" <span style='color:var(--accent)'>▶</span> "+esc(nl(e.to))+
+    "</span><span class='cellmono'>"+esc(e.auth)+"</span><span class='cellmono' style='color:var(--muted)'>"+esc(e.payload||"—")+"</span>";
+  intE.appendChild(d);
+});
+// ---------- discovery: coverage grid + side panel ----------
+const COV=[
+ {band:"MEDDPICC — deal qualification",cells:[
+  {key:"M",code:"M · metrics",st:"partial",pill:"PARTIAL",sum:"ROI model drafted (capture · labor · margin) — zero real volume numbers yet.",mn:"1 mention · rep-asserted, not buyer-confirmed",
+   rub:"STRONG: current → target → delta in their numbers, confirmed by 2+ stakeholders, KPI owner named, proof point attached. WEAK: vendor-asserted or generic value with no baseline and nobody owning the number.",
+   need:"Strong entry looks like: “Vendors miss ~9 calls/wk after hours (phone log, confirmed by owner) → Emma answers 100% → ≈ $2.1k/mo recovered bookings.” Fills from: transcripts where numbers are spoken, phone-system exports, baseline.md.",
+   ev:[{q:"Monthly value = (incremental loads COVERED × gross margin) + …",s:"FDE — ROI & Business Value.md §2",v:false}]},
+  {key:"E",code:"E · economic buyer",st:"filled",pill:"FILLED",sum:"Internal venture — you. For customers: the one person who can approve the spend.",mn:"n/a for AIDO",
+   rub:"STRONG: named individual, authority validated by a second source, met directly, their personal success measure known. WEAK: inferred from a title, never met, champion “handling” them.",
+   need:"Who can say yes when everyone else says no? Name them, validate authority with two sources, log a direct interaction and their personal win. Fills from: attendee lists, transcripts where money/sign-off is discussed.",ev:[]},
+  {key:"DC",code:"D · decision criteria",st:"filled",pill:"FILLED",sum:"Zero prod risk (golden constraint) + no AWS credentials ever handed to HR.",mn:"3 mentions · written in the architecture doc",
+   rub:"STRONG: written, weighted criteria confirmed by the buyer — and you've shaped at least one toward your differentiation. WEAK: a verbal wish-list from one contact with no view of how vendors get compared.",
+   need:"The written list the solution is judged on — technical, business, and (for AI deals) governance criteria, with weights and authors. Fills from: transcripts, RFP docs, security questionnaires.",
+   ev:[{q:"Nothing in this integration may change, redeploy, or risk that path unless a flag is explicitly flipped.",s:"AIDO-architecture.md header",v:true},{q:"Rejected — Option A: issuing HR a static AWS access key.",s:"AIDO-architecture.md §3",v:true}]},
+  {key:"DP",code:"D · decision process",st:"filled",pill:"FILLED",sum:"Flag-gated ship-dark; master-switch cutover; instantly reversible.",mn:"2 mentions · engagement ≠ progress",
+   rub:"STRONG: every step with date + owner + exit criterion, buyer-confirmed, technical validation and business approval both mapped. WEAK: “decision expected Q3” inferred from activity — engagement mistaken for progress.",
+   need:"The steps between “yes” and “live”, each with a date, an owner, and what evidence exits it. Processes change mid-deal — recheck. Fills from: transcripts, mutual action plan.",
+   ev:[{q:"the master switch — points at GCP (prod) or HR SIP trunk. Instant, reversible.",s:"AIDO-architecture.md §4",v:true}]},
+  {key:"PP",code:"P · paper process",st:"na",pill:"N/A",sum:"Internal — for customers: the chain from verbal yes to signature. Deals die here.",mn:"template cell",
+   rub:"STRONG: security review, legal (MSA/DPA), privacy, procurement each with an owner and typical duration; signer identified; started before the verbal yes. WEAK: “standard procurement” with no steps, owners, or durations.",
+   need:"From verbal yes to signature: security questionnaire, legal redlines, privacy, vendor onboarding — owner and clock per step, plus how long the last comparable vendor took. Fills from: transcripts, procurement docs, email threads.",ev:[]},
+  {key:"I",code:"I · identify pain",st:"partial",pill:"PARTIAL",sum:"Missed/after-hours enquiry hypothesis — surfaced, not quantified. Run caller probed capabilities.",mn:"1 mention · no quantified cost of inaction",
+   rub:"STRONG: pain quantified and root-caused, acknowledged by a power stakeholder, cost-of-doing-nothing in the customer's own words. WEAK: industry-generic pain asserted by the seller, no senior confirmation it actually hurts.",
+   need:"The pain chain: verbatim admission (who said it, their role) → business impact → cost of 12 months of nothing. Fills from: transcripts (the richest source), run mining, support/ops data.",
+   ev:[{q:"What can you do for me?",s:"run #9c6cf636 transcript (screenshot 2026-07-04)",v:true}]},
+  {key:"CH",code:"C · champion",st:"na",pill:"N/A",sum:"Internal — for customers: who spends political capital for you when you're absent?",mn:"template cell · actions, never compliments",
+   rub:"STRONG: all three tests evidenced by actions on record — has power, sold internally without you, wins personally (arranged the EB meeting, presented the case, shared the org map). WEAK: a friendly coach who likes you but has never been tested.",
+   need:"Set tests and log outcomes: “would you introduce me to [EB]?” — then record whether it happened. A champion is proven by what they do, not what they say. Fills from: transcripts, email threads showing advocacy.",ev:[]},
+  {key:"CO",code:"C · competition",st:"filled",pill:"FILLED",sum:"The incumbent is the current GCP Gemini Live path — the bar Emma must beat.",mn:"2 mentions",
+   rub:"STRONG: every alternative named — vendors, internal build, do-nothing — each with its internal backer and counter-positioning tied to the written criteria. WEAK: “no competition” recorded (usually means not discovered).",
+   need:"Anyone or anything competing for the same funds: named vendors, “build it ourselves”, “do nothing”, and other initiatives — plus who inside backs each. Fills from: transcripts, research, champion intel.",
+   ev:[{q:"Current production voice path is GCP (Twilio → Gemini Live).",s:"AIDO-architecture.md header",v:true}]}]},
+ {band:"T — the FDE band: commitment-gated, the layer MEDDPICC misses",cells:[
+  {key:"TD",code:"T · data access & readiness",st:"filled",pill:"FILLED",sum:"DynamoDB via persona adapter — deployed, 7/7 tests, proven end-to-end read.",mn:"proven · the Palantir gate is passed",
+   rub:"STRONG: static cut of real data delivered by a committed date, data-owner call held, access agreement signed, working read proven. WEAK: “they said we can get the data” — no owner, no date, no agreement. Do not commit FDE time without this.",
+   need:"Per dataset: owner named → conversation held → static cut delivered → live connection. Data access is the #1 pilot-killer; this cell red past week one is a deal warning. Fills from: access grants, data-owner calls, adapter test results.",
+   ev:[{q:"+61 •• ••• 204 → Prism Cinema / Gladis, soul 7,425 chars",s:"implementation-status.md §1",v:true}]},
+  {key:"TI",code:"T · integration feasibility",st:"filled",pill:"FILLED",sum:"HTTPS/MCP-only reach mapped; Option-B doorway proven; MVI (persona lookup) works end-to-end.",mn:"corroborated across 4 docs · champion-engineer: you",
+   rub:"STRONG: minimum-viable integration scoped (one input, one output), sandbox credentials issued, a named customer engineer calendar-blocked. WEAK: integration surface unknown, no technical counterpart on their side.",
+   need:"What must the agent read/write, each system's API + auth, the thinnest end-to-end slice, and the named engineer on their side who'll spend hours on this. Fills from: repo scans, API docs, technical discovery calls.",
+   ev:[{q:"HR reaches AWS only via outbound HTTP/MCP … no native DynamoDB action.",s:"implementation-status.md §6",v:true}]},
+  {key:"TE",code:"T · success criteria & evals",st:"empty",pill:"EMPTY",sum:"THE gap: no baseline (calls/wk, missed %, booking value), no eval set, no go/no-go date.",mn:"generates asks #1 #2 #4 · evals gate production",
+   rub:"STRONG: capability + safety + cost targets co-authored with their SMEs before build, human baseline measured, 50–100 real-case eval set, decision date calendar-blocked with pass thresholds in writing. WEAK: “success = they like the demo”, criteria invented after the pilot.",
+   need:"Define pass/fail before building: today's human baseline (the ROI denominator), an eval set drawn from their last 90 days of real tasks, and “what score on what date means go”. Fills from: SME workshops, phone-system exports, historical task samples.",ev:[]},
+  {key:"TT",code:"T · telephony",st:"filled",pill:"FILLED",sum:"Path A (buy in HR — works today) vs Path B (BYO — SIP host support-gated).",mn:"corroborated · vertical-specific cell",
+   rub:"STRONG: number ownership + console access confirmed, port-vs-re-aim decided, SIP/regulatory dependencies listed with lead times. WEAK: “we have numbers somewhere” — ownership and routing authority unknown.",
+   need:"Who owns the numbers, which console, re-aim vs port, and every telephony dependency with its lead time. Voice-AI-specific: no generic framework tracks this. Fills from: telephony notes, carrier console exports.",
+   ev:[{q:"HappyRobot never surfaces the inbound SIP host — verified exhaustively on 2026-06-23.",s:"telephony-going-live.md",v:true}]},
+  {key:"TG",code:"T · security & AI governance",st:"partial",pill:"PARTIAL",sum:"Consent/PII gate designed; AU bundle in Draft; X-API-Key → OAuth2 hardening pending.",mn:"1 blocker live · start security week 0, not after the pilot works",
+   rub:"STRONG: security pre-review done before the pilot, residency + audit requirements in writing, named security sign-off owner engaged week 0. WEAK: security discovered only after the pilot succeeds — the classic FDE deal-killer.",
+   need:"Recording consent, PII posture, residency in writing, the AI-governance path (board? DPIA?), and their named security owner — engaged before build, not after. Fills from: compliance docs, security calls, console status.",
+   ev:[{q:"a bundle in Draft is not submitted and not usable",s:"telephony-going-live.md",v:true}]}]}];
+const ASK=[
+ {q:"How many enquiry calls does a vendor like Prism Cinema get per week — and how many land after hours or ring out?",w:"Mom-Test: specific + quantifying — this is the baseline",tag:"ASK THE VENDOR",cells:["TE","M"]},
+ {q:"Walk me through the last booking you missed because nobody answered. What was it worth?",w:"past-specific, not hypothetical — fills the pain chain with a delta",tag:"ASK THE VENDOR",cells:["I","TE"]},
+ {q:"Run a pinned-number web call: does to_number flow into load_persona on browser calls?",w:"clears the hydration gate · run #9c6cf636 greeted generically",tag:"TECHNICAL VERIFY",cells:["TI"]},
+ {q:"Of last month's bookings, how many started as a phone call vs email/Instagram?",w:"channel mix sets the capture ceiling",tag:"ASK THE VENDOR",cells:["M","TE"]},
+ {q:"Submit the AU regulatory bundle today — approval takes hours to days and gates every AU number.",w:"lead-time starts only when submitted",tag:"ACTION",cells:["TG"]},
+ {q:"What 50–100 real enquiries from the last 90 days should Emma be tested against — and how does a human do on them today?",w:"the eval set that gates production; co-author with the vendor",tag:"ASK THE VENDOR",cells:["TE"]}];
+const covEl=document.getElementById("covgrid"), covPanel=document.getElementById("cov-panel");
+let covSel=null;
+function covDefault(){
+  covPanel.innerHTML="<div class='empty'><span class='g'>◈</span><span style='font-size:12.5px;max-width:250px;line-height:1.6'>Click any cell. Filled cells show their evidence; empty cells show what belongs there, what source fills it, and the questions that get it.</span></div>";
+}
+function covShow(c,el){
+  covSel&&covSel.classList.remove("sel");covSel=el;el.classList.add("sel");
+  const pc=c.st==="filled"?"sp-new":c.st==="partial"?"sp-old":c.st==="empty"?"sp-red":"sp-ext";
+  let h="<span class='statuspill "+pc+"'>"+esc(c.pill)+"</span><h3 style='margin-top:8px'>"+esc(c.code)+"</h3>"+
+    "<div class='k'>current state</div><p>"+esc(c.sum)+"</p>"+
+    "<div class='k'>evidence grade</div><p class='mono' style='font-size:11px'>"+esc(c.mn)+"</p>"+
+    "<div class='k'>strong vs weak — the rubric</div><p style='font-size:11.5px'>"+esc(c.rub)+"</p>"+
+    "<div class='k'>what fills this cell</div><p>"+esc(c.need)+"</p>";
+  if(c.ev.length)h+="<div class='k'>evidence — click to open the source</div>"+
+    c.ev.map(e=>"<blockquote>“"+esc(e.q)+"”<br>"+srcTag(e.s)+" <span class='statuspill "+(e.v?"sp-new":"sp-acc")+"' style='font-size:8px;vertical-align:1px'>"+(e.v?"VALIDATED":"SUGGESTED — confirm")+"</span></blockquote>").join("");
+  else h+="<div class='k'>evidence</div><p style='color:var(--muted)'>none yet — this cell fills automatically when a transcript, data cut, or scan provides a citable claim. Nothing enters without a quote + source.</p>";
+  const asks=ASK.filter(a=>a.cells.includes(c.key));
+  if(asks.length)h+="<div class='k'>asks that fill this cell</div>"+
+    asks.map(a=>"<div class='flagrow'><span class='fl'>▸</span> "+esc(a.q)+"</div>").join("");
+  h+="<div class='cbtns'><button class='hbtn' data-c='cell'>⧉ copy cell as markdown</button></div>";
+  covPanel.innerHTML=h;
+  covPanel.querySelector("[data-c='cell']").onclick=(ev)=>{
+    let md="## "+c.code+" — "+c.pill+"\n\n"+c.sum+"\n\n_"+c.mn+"_\n";
+    c.ev.forEach(e=>md+="\n> "+e.q+"\n> — `"+e.s+"`\n");
+    asks.forEach(a=>md+="\n- ASK: "+a.q);
+    copy(md,ev.target);
+  };
+}
+COV.forEach(b=>{
+  const bd=document.createElement("div");bd.className="covband";
+  bd.innerHTML="<div class='bl'>"+esc(b.band)+"</div>";
+  const cw=document.createElement("div");cw.className="covcells";
+  b.cells.forEach(c=>{
+    const pc=c.st==="filled"?"sp-new":c.st==="partial"?"sp-old":c.st==="empty"?"sp-red":"sp-ext";
+    const d=document.createElement("div");d.className="covcell cv-"+c.st;
+    d.innerHTML="<div class='ch'>"+esc(c.code)+"<span class='npill statuspill "+pc+"'>"+esc(c.pill)+"</span></div>"+
+      "<div class='cb'>"+esc(c.sum)+"</div><div class='mn'>"+esc(c.mn)+"</div>";
+    d.onclick=()=>covShow(c,d);
+    cw.appendChild(d);
+  });
+  bd.appendChild(cw);covEl.appendChild(bd);
+});
+covDefault();
+// ---------- discovery: ask-next queue ----------
+const askEl=document.getElementById("asknext");
+const askCard=document.createElement("div");askCard.className="tablecard";
+ASK.forEach((a,i)=>{
+  const d=document.createElement("div");d.className="qcard";
+  d.innerHTML="<span class='qn'>"+(i+1)+"</span><span><span class='qt'>"+esc(a.q)+"</span><div class='qw'>fills "+esc(a.cells.join(" + "))+" · "+esc(a.w)+"</div></span>"+
+    "<span><span class='statuspill "+(a.tag==="ACTION"?"sp-old":a.tag==="TECHNICAL VERIFY"?"sp-live":"sp-acc")+"'>"+esc(a.tag)+"</span></span>";
+  askCard.appendChild(d);
+});
+askEl.appendChild(askCard);
+// ---------- signals: insight ledger ----------
+const SIGS=[
+ {ty:"technical fact",col:"var(--live)",t:"HappyRobot reaches AWS only via outbound HTTPS/MCP — no SDK, no native DynamoDB",q:"HR has no native DynamoDB action, so the persona lookup must go through our own endpoint.",s:"implementation-status.md §6",ch:"docs",slot:"T·integration feasibility",st:"CORROBORATED",pc:"sp-new",mn:"3 mentions across docs"},
+ {ty:"risk",col:"var(--red)",t:"Inbound SIP host is support-gated — BYO numbers stall without HappyRobot support",q:"HappyRobot never surfaces the inbound SIP host — verified exhaustively on 2026-06-23.",s:"telephony-going-live.md",ch:"docs",slot:"T·telephony",st:"VALIDATED",pc:"sp-new",mn:"2 mentions · verified 3 ways"},
+ {ty:"open question",col:"var(--old)",t:"Does a web call carry to_number? Persona lookup may 404 on browser calls",q:"to_number auto-flows + agent calls tool + embodies, on a live call — needs a real web-call or phone call.",s:"implementation-status.md §4 · corroborated by run #9c6cf636 generic greeting",ch:"run",slot:"T·integration feasibility",st:"NEW → VERIFY",pc:"sp-live",mn:"2 mentions · doc + run"},
+ {ty:"pain",col:"var(--red)",t:"Callers probe capabilities immediately — the agent must communicate value in its first exchange",q:"What can you do for me?",s:"run #9c6cf636 transcript (screenshot 2026-07-04)",ch:"run",slot:"I·pain",st:"NEW",pc:"sp-old",mn:"1 mention · first seen Jun 25"},
+ {ty:"business goal",col:"var(--new)",t:"One workflow, N vendors — onboarding becomes a DynamoDB row, not a deploy",q:"one Emma workflow serves all vendors — persona resolved by the dialed number.",s:"telephony-going-live.md TL;DR",ch:"docs",slot:"M·metrics",st:"CORROBORATED",pc:"sp-new",mn:"4 mentions across docs"},
+ {ty:"risk",col:"var(--red)",t:"AU numbers blocked until regulatory bundle approved (currently Draft)",q:"you cannot buy an AU number until a matching bundle is Approved.",s:"telephony-going-live.md",ch:"docs",slot:"T·security & governance",st:"VALIDATED",pc:"sp-new",mn:"1 mention · hit live 2026-06-24"},
+ {ty:"commitment",col:"var(--muted)",t:"None logged yet — and that's the honest state",q:"Only commitments (time, money, reputation, referral) count as validation.",s:"Mom Test rule — the ledger only advances on commitments",ch:"rule",slot:"C·champion",st:"WATCHING",pc:"sp-ext",mn:"—"}];
+const sigEl=document.getElementById("sigledger");
+const sigCard=document.createElement("div");sigCard.className="tablecard";
+SIGS.forEach(g=>{
+  const d=document.createElement("div");d.className="sigrow";
+  d.innerHTML="<span><span class='sigtype' style='color:"+g.col+"'>"+esc(g.ty)+"</span><span class='chan'>"+esc(g.ch)+"</span></span>"+
+    "<span><b style='font-size:12.5px'>"+esc(g.t)+"</b><blockquote style='margin:5px 0 0'>“"+esc(g.q)+"”<br>"+srcTag(g.s)+"</blockquote></span>"+
+    "<span><span class='statuspill "+g.pc+"'>"+esc(g.st)+"</span><div class='mn' style='margin-top:5px'>"+esc(g.slot)+"</div><div class='mn'>"+esc(g.mn)+"</div></span>";
+  sigCard.appendChild(d);
+});
+sigEl.appendChild(sigCard);
+// graphs
+buildGraph("map",MAPG,"map-canvas","map-panel",true);
+buildGraph("disc",DISCG,"disc-canvas","disc-panel",false);
+buildGraph("integ",INTEGG,"integ-canvas","integ-panel",false);
+function drawActive(){
+  const active=document.querySelector(".view.on").id;
+  if(active==="map")drawGraph(graphs.map,"map");
+  if(active==="flow"){drawGraph(graphs.disc,"disc");drawGraph(graphs.integ,"integ");}
+}
+// before/after (map only)
+function setMode(m){
+  mapMode=m;
+  document.getElementById("bBefore").classList.toggle("on",m==="before");
+  document.getElementById("bAfter").classList.toggle("on",m==="after");
+  MAPG.nodes.forEach(n=>document.getElementById("map-n-"+n.id).classList.toggle("ghost",m==="before"&&n.appearsIn==="after"));
+  drawGraph(graphs.map,"map");
+}
+// nav / theme
+const crumbNames={flow:"Engagement flow",discovery:"Discovery",signals:"Signals",strategy:"Strategy",map:"Systems map",integrations:"Integrations"};
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");document.getElementById(b.dataset.v).classList.add("on");
+  document.getElementById("crumbTab").textContent=crumbNames[b.dataset.v];
+  document.getElementById("modeSeg").style.visibility=(b.dataset.v==="map")?"visible":"hidden";
+  requestAnimationFrame(drawActive);
+});
+function flipTheme(){const d=!document.documentElement.classList.contains("dark");
+  document.documentElement.classList.toggle("dark",d);
+  try{localStorage.setItem("aidoTheme",d?"dark":"light")}catch(e){}}
+let pref=null;try{pref=localStorage.getItem("aidoTheme")}catch(e){}
+if(pref?pref==="dark":matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("dark");
+window.addEventListener("resize",drawActive);
+setMode("before");
+document.getElementById("modeSeg").style.visibility="hidden";
+requestAnimationFrame(drawActive);
+</script>
+</body>
+</html>
