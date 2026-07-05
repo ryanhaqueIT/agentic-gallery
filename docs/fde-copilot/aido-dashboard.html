@@ -92,6 +92,8 @@
   .stages{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr;gap:0;align-items:stretch}
   @media(max-width:1000px){.stages{grid-template-columns:1fr}.stages .arr{transform:rotate(90deg);margin:2px auto}}
   .stage{background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+  .stage.link{cursor:pointer;transition:box-shadow .15s}
+  .stage.link:hover{box-shadow:0 0 0 2px var(--accent)}
   .stage .nhead{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line);
     font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--accent);font-weight:700}
   .stage .nhead .npill{margin-left:auto}
@@ -364,10 +366,10 @@ const META={
   status:"integration in flight — persona path proven; run on record (v5); demo gated on hydration verification; every prod-touching flag still OFF",
   golden:"Current production voice path is GCP (Twilio → Gemini Live). Nothing may change or risk that path unless a flag is explicitly flipped.",
   stages:[
-    {cmd:"/fde-prep",nm:"Prep — outside-in discovery",ds:"Account research, use-case + ROI hypothesis, interview kit, day-one data-access ask. Creates this dashboard (mostly empty — the flow and the unknowns).",out:"01-brief.md + dashboard v0",pill:"sp-new",pillTx:"DONE",nt:"AIDO context established from vault notes"},
-    {cmd:"/fde-map",nm:"Map — inside-out discovery",ds:"Deterministic scans + transcript mining + evidence-cited synthesis of systems, auth, and integration points.",out:"02-context-pack/ + systems map tab",pill:"sp-new",pillTx:"DONE",nt:"you're looking at its output — every map claim cites a source"},
-    {cmd:"/fde-demo",nm:"Demo — build on platform",ds:"Demo spec → your approval → build via MCP → test waves → web-call link.",out:"03-demo.md + demo-spec view + live agent",pill:"sp-live",pillTx:"IN PROGRESS",nt:"GATE: run #9c6cf636 greeted generically — verify persona hydration first"},
-    {cmd:"/fde-integrate",nm:"Integrate — production path",ds:"Adapters (Option B), credential checklist, ship-dark cutover plan, one-switch rollback.",out:"04-integration/",pill:"sp-old",pillTx:"PARTIAL",nt:"persona adapter LIVE ✓ · calendar/post-call shims + SIP path pending"}
+    {cmd:"/fde-prep",href:"../../doc-viewer.html?back=docs/fde-copilot/aido-dashboard.html&file=docs/fde-copilot/skills/fde-prep.md&title=/fde-prep%20skill%20spec&label=SKILL",nm:"Prep — outside-in discovery",ds:"Account research, use-case + ROI hypothesis, interview kit, day-one data-access ask. Creates this dashboard (mostly empty — the flow and the unknowns).",out:"01-brief.md + dashboard v0",pill:"sp-new",pillTx:"DONE",nt:"AIDO context established from vault notes"},
+    {cmd:"/fde-map",href:"../../doc-viewer.html?back=docs/fde-copilot/aido-dashboard.html&file=docs/fde-copilot/skills/fde-map.md&title=/fde-map%20skill%20spec&label=SKILL",nm:"Map — inside-out discovery",ds:"Deterministic scans + transcript mining + evidence-cited synthesis of systems, auth, and integration points.",out:"02-context-pack/ + systems map tab",pill:"sp-new",pillTx:"DONE",nt:"you're looking at its output — every map claim cites a source"},
+    {cmd:"/fde-demo",href:"../../doc-viewer.html?back=docs/fde-copilot/aido-dashboard.html&file=docs/fde-copilot/skills/fde-demo.md&title=/fde-demo%20skill%20spec&label=SKILL",nm:"Demo — build on platform",ds:"Demo spec → your approval → build via MCP → test waves → web-call link.",out:"03-demo.md + demo-spec view + live agent",pill:"sp-live",pillTx:"IN PROGRESS",nt:"GATE: run #9c6cf636 greeted generically — verify persona hydration first"},
+    {cmd:"/fde-integrate",href:"../../doc-viewer.html?back=docs/fde-copilot/aido-dashboard.html&file=docs/fde-copilot/skills/fde-integrate.md&title=/fde-integrate%20skill%20spec&label=SKILL",nm:"Integrate — production path",ds:"Adapters (Option B), credential checklist, ship-dark cutover plan, one-switch rollback.",out:"04-integration/",pill:"sp-old",pillTx:"PARTIAL",nt:"persona adapter LIVE ✓ · calendar/post-call shims + SIP path pending"}
   ]
 };
 
@@ -646,8 +648,9 @@ function fbCopy(t){const ta=document.createElement("textarea");ta.value=t;ta.sty
 // stage strip
 const stEl=document.getElementById("stages");
 META.stages.forEach((s,i)=>{
-  const d=document.createElement("div");d.className="stage";
-  d.innerHTML="<div class='nhead'>"+esc(s.cmd)+"<span class='npill statuspill "+s.pill+"'>"+esc(s.pillTx)+"</span></div>"+
+  const d=document.createElement("div");d.className="stage"+(s.href?" link":"");
+  if(s.href){d.onclick=()=>window.open(s.href,"_blank");d.title="Open the "+s.cmd+" skill spec";}
+  d.innerHTML="<div class='nhead'>"+esc(s.cmd)+(s.href?" <span style='font-weight:400;color:var(--muted)'>↗ spec</span>":"")+"<span class='npill statuspill "+s.pill+"'>"+esc(s.pillTx)+"</span></div>"+
     "<div class='nb'><div class='nm'>"+esc(s.nm)+"</div><div class='ds'>"+esc(s.ds)+"</div>"+
     "<div class='out'>writes: "+esc(s.out)+"</div><div class='nt'>"+esc(s.nt)+"</div></div>";
   stEl.appendChild(d);
