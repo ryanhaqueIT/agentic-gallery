@@ -2,7 +2,7 @@
 
 > **Status:** specified, not yet built. Design spec for the runnable skill; the dashboard's
 > systems map, coverage grid, and signals ledger are this stage's outputs, prototyped.
-> Refine via PR — this file is the source of truth.
+> [Refine it on GitHub](https://github.com/ryanhaqueIT/agentic-gallery/blob/master/docs/fde-copilot/skills/fde-map.md) — this file is the source of truth.
 
 ## Purpose
 

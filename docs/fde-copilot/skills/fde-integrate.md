@@ -1,7 +1,7 @@
 # /fde-integrate — the production path
 
 > **Status:** specified, not yet built. Design spec for the runnable skill; the AIDO
-> integration is the living proof of the pattern. Refine via PR.
+> integration is the living proof of the pattern. [Refine it on GitHub](https://github.com/ryanhaqueIT/agentic-gallery/blob/master/docs/fde-copilot/skills/fde-integrate.md).
 
 ## Purpose
 

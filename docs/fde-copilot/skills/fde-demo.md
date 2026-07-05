@@ -1,7 +1,7 @@
 # /fde-demo — build the demo on the platform
 
 > **Status:** specified, not yet built. Design spec for the runnable skill; the demo-spec
-> view is this stage's output artifact, prototyped. Refine via PR.
+> view is this stage's output artifact, prototyped. [Refine it on GitHub](https://github.com/ryanhaqueIT/agentic-gallery/blob/master/docs/fde-copilot/skills/fde-demo.md).
 
 ## Purpose
 

@@ -2,7 +2,7 @@
 
 > **Status:** specified, not yet built. This is the skill's design spec, transcribed from the
 > approved fde-toolkit blueprint. The runnable skill (`.claude/skills/fde-prep/SKILL.md`)
-> gets built from this document. Found a gap? Open a PR — this file is the source of truth.
+> gets built from this document. Found a gap? [Refine it on GitHub](https://github.com/ryanhaqueIT/agentic-gallery/blob/master/docs/fde-copilot/skills/fde-prep.md) — this file is the source of truth.
 
 ## Purpose
 
