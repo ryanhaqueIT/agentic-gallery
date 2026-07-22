@@ -63,6 +63,8 @@
     padding:6px 11px;cursor:pointer;font:inherit;font-size:11px}
   main{padding:18px 20px 50px;flex:1}
   .view{display:none}.view.on{display:block}
+  .method-embed-shell{height:calc(100vh - 94px);min-height:720px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fbfbfc;box-shadow:var(--shadow)}
+  .method-embed{display:block;width:100%;height:100%;border:0;background:#fbfbfc}
   h2{font-size:13px;margin:22px 0 8px;font-weight:650}
   h2:first-child{margin-top:4px}
   .sub{color:var(--muted);font-size:11.5px;margin:-4px 0 12px}
@@ -193,7 +195,8 @@
   </div>
   <div class="navlab">Engagement</div>
   <nav class="nav" id="nav">
-    <button data-v="flow" class="on"><span class="glyph">⇢</span>Engagement flow</button>
+    <button data-v="method" class="on"><span class="glyph">↔</span>FDE operating model</button>
+    <button data-v="flow"><span class="glyph">⇢</span>Engagement flow</button>
     <button data-v="discovery"><span class="glyph">◈</span>Discovery</button>
     <button data-v="signals"><span class="glyph">⚡</span>Signals</button>
     <button data-v="strategy"><span class="glyph">◎</span>Strategy</button>
@@ -214,7 +217,7 @@
 
 <div class="content">
   <div class="topbar">
-    <span class="crumb">Engagements / <b>AIDO (WeddingOS)</b> / <span id="crumbTab">Engagement flow</span></span>
+    <span class="crumb">Engagements / <b>AIDO (WeddingOS)</b> / <span id="crumbTab">FDE operating model</span></span>
     <span class="sp"></span>
     <span class="pill"><span class="d" style="background:var(--live)"></span>stage: demo · gate: verify hydration</span>
     <div class="seg" id="modeSeg">
@@ -224,8 +227,15 @@
   </div>
 
   <main>
+    <!-- ============ FDE OPERATING MODEL (exact exported bundle) ============ -->
+    <section class="view on" id="method">
+      <div class="method-embed-shell">
+        <iframe class="method-embed" title="FDE operating model — translations, feedback loop, and trust ladder" src="fde-operating-model/Business%20to%20Engineering.dc.html"></iframe>
+      </div>
+    </section>
+
     <!-- ============ ENGAGEMENT FLOW ============ -->
-    <section class="view on" id="flow">
+    <section class="view" id="flow">
       <div class="now">
         <span class="fl">▶ WHERE WE ARE</span>
         <p><b>Demo stage, at the verification gate.</b> Run <span class="mono">#9c6cf636</span> (v5, Production, Completed) proved the pipeline end-to-end but greeted generically — persona hydration must be verified before demoing to anyone. Upstream discovery and mapping are done; integration is half-built (persona adapter live, calendar/post-call shims pending).</p>
@@ -833,7 +843,7 @@ function setMode(m){
   drawGraph(graphs.map,"map");
 }
 // nav / theme
-const crumbNames={flow:"Engagement flow",discovery:"Discovery",signals:"Signals",strategy:"Strategy",map:"Systems map",integrations:"Integrations"};
+const crumbNames={method:"FDE operating model",flow:"Engagement flow",discovery:"Discovery",signals:"Signals",strategy:"Strategy",map:"Systems map",integrations:"Integrations"};
 document.getElementById("nav").addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
   document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));
